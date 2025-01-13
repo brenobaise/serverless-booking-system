@@ -8,7 +8,6 @@ if (!MONGODB_URI) {
   );
 }
 
-// Caching the connection to avoid multiple connections in serverless environments
 let cached = global.mongoose;
 
 if (!cached) {
@@ -17,37 +16,25 @@ if (!cached) {
 
 async function connectToDatabase() {
   if (cached.conn) {
-    // If there’s an existing connection, return it
+    console.log("Using cached MongoDB connection.");
     return cached.conn;
   }
 
   if (!cached.promise) {
-    // If no connection exists, create one
-    try {
-      const options = {
-        bufferCommands: false,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      };
-
-      cached.promise = mongoose
-        .connect(MONGODB_URI, options)
-        .then((mongoose) => mongoose);
-    } catch (error) {
-      console.error("MongoDB connection error:", error.message);
-      throw new Error("Failed to connect to MongoDB");
-    }
+    console.log("Creating a new MongoDB connection...");
+    cached.promise = mongoose
+      .connect(MONGODB_URI)
+      .then((mongoose) => {
+        console.log("MongoDB connection established.");
+        return mongoose;
+      })
+      .catch((error) => {
+        console.error("MongoDB connection failed:", error.message);
+        throw new Error("Failed to connect to MongoDB");
+      });
   }
 
-  try {
-    // Wait for the connection to be established
-    cached.conn = await cached.promise;
-  } catch (error) {
-    cached.promise = null; // Reset the promise to allow retries
-    console.error("MongoDB connection failed:", error.message);
-    throw new Error("Failed to connect to MongoDB");
-  }
-
+  cached.conn = await cached.promise;
   return cached.conn;
 }
 
