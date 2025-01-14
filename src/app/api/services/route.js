@@ -2,6 +2,7 @@ import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
 import e, { json } from "express";
 
+// GET ../services -> returns an object with all available services
 export async function GET(req) {
   await connectToDatabase();
 
@@ -9,6 +10,7 @@ export async function GET(req) {
   return new Response(JSON.stringify(services), { status: 200 });
 }
 
+//POST ../services -> creates a service based on request.body
 export async function POST(req) {
   try {
     await connectToDatabase();
