@@ -1,7 +1,18 @@
 ## To Do List
 
+    Front End:
+    Users:
+    -   View all Services
+    -   Create a booking
+
+    Admin Dashboard:
+    - View all Bookings
+    - View all Services
+    - Temp : Manually create Bookings
+    - Temp : Manually create Service
+
+
     Back End:
-        - Login , add NextJs Auth
         - U Services
         - U Bookings
 
@@ -14,4 +25,5 @@
     - get booking by id
     - delete booking by id
     - post new service
-    - post new booking, dependant on a service id
+    - post new booking, dependant on a service
+    - NextJS Auth login added
