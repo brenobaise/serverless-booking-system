@@ -36,3 +36,39 @@ export async function GET(req, { params }) {
     );
   }
 }
+
+// DELETE api/bookings/id
+export async function DELETE(req, { params }) {
+  try {
+    await connectToDatabase();
+
+    const { id } = params;
+
+    if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
+      return NextResponse.json(
+        { error: `Invalid booking ID format : ${params}` },
+        { status: 400 }
+      );
+    }
+
+    const deletedBooking = await Booking.findByIdAndDelete(id);
+
+    if (!deletedBooking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { message: "Booking deleted successfully", booking: deletedBooking },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(
+      `Error deleting Booking, ID received: ${params}`,
+      error.message
+    );
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
