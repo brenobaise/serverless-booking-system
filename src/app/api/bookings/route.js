@@ -2,10 +2,22 @@ import connectToDatabase from "@/lib/mongoose";
 import Booking from "@/app/models/Booking";
 import { NextRequest, NextResponse } from "next/server";
 import { validateBookingData } from "@/lib/validators/bookingValidation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-// GET../bookings => gets all available bookings
+// GET api/bookings => gets all available bookings
+// Admin Only Route ?
 export async function GET(req) {
   await connectToDatabase();
+  const session = await getServerSession(authOptions);
+
+  if (!session || session.user.role !== "admin") {
+    return NextResponse.json(
+      { error: "Unauthorized: Admin access only" },
+      { status: 401 }
+    );
+  }
+
   const bookings = await Booking.find({});
   return new Response(JSON.stringify(bookings), { status: 200 });
 }

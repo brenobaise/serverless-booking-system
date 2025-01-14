@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongoose";
 import Booking from "@/app/models/Booking";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // GET api/booking/id
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
 
-    const { id } = params;
+    const { id } = await params;
 
     // Validate the ID format (ObjectID format)
     if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -42,7 +44,16 @@ export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
 
-    const { id } = params;
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized: Admin access only" },
+        { status: 401 }
+      );
+    }
+
+    const { id } = await params;
 
     if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
       return NextResponse.json(

@@ -1,6 +1,8 @@
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // GET api/services -> returns an object with all available services
 export async function GET(req) {
@@ -20,9 +22,18 @@ export async function GET(req) {
 }
 
 //POST api/services -> creates a service based on request.body
+// Admin Route only
 export async function POST(req) {
   try {
     await connectToDatabase();
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized: Admin access only" },
+        { status: 401 }
+      );
+    }
 
     const body = await req.json();
     const newService = await Service.create(body);
