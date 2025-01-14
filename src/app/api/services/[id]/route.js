@@ -1,6 +1,8 @@
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
 import { NextRequest, NextResponse } from "next/server";
+
+// GET api/services/id
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();

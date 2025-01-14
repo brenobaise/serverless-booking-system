@@ -1,7 +1,8 @@
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
 import { NextRequest, NextResponse } from "next/server";
-// GET ../services -> returns an object with all available services
+
+// GET api/services -> returns an object with all available services
 export async function GET(req) {
   try {
     await connectToDatabase();
@@ -18,7 +19,7 @@ export async function GET(req) {
   }
 }
 
-//POST ../services -> creates a service based on request.body
+//POST api/services -> creates a service based on request.body
 
 export async function POST(req) {
   try {
