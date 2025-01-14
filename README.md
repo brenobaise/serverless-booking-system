@@ -3,13 +3,14 @@
     Back End:
         - Login , add NextJs Auth
         - [] Place a booking - important
-        - UD Services
-        - CUD Bookings
+        - U Services
+        - CU Bookings
 
 
     Implemented:
     - get all services
     - get service by id
+    - delete service by id
     - get all bookings
     - get booking by id
     - delete booking by id
