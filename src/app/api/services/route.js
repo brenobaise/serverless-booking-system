@@ -20,7 +20,6 @@ export async function GET(req) {
 }
 
 //POST api/services -> creates a service based on request.body
-
 export async function POST(req) {
   try {
     await connectToDatabase();
