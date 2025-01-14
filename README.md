@@ -2,8 +2,13 @@
 
     Back End:
         - Login , add NextJs Auth
-        - [] Place a booking
+        - [] Place a booking - important
         - Delete a booking
-        - View available bookings
-        - CRUD Services
+        - RUD Services
         - CRUD Bookings
+
+
+    Implemented:
+    - get all services
+    - get all bookings
+    - post new service
