@@ -1,7 +1,9 @@
+// src/app/services/page.jsx
 "use client";
 import "../styles/global.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ServiceList from "@/components/services/ServiceList";
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -27,25 +29,10 @@ export default function ServicesPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex justify-center">
-      {services.length === 0 ? (
-        <p>No services available.</p>
-      ) : (
-        <ul className="grid grid-cols-1 gap-6 ">
-          {services.map((service) => (
-            <li
-              key={service._id}
-              className="border p-4 rounded shadow bg-white text-black "
-            >
-              <h2 className="text-xl font-bold">{service.name}</h2>
-              <p>{service.small_description}</p>
-              <p className="text-md text-gray-600 ">
-                Price: ${service.price} | Duration: {service.duration} mins
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="flex justify-center min-h-full overflow-auto">
+      <div className="w-full max-w-6xl">
+        <ServiceList services={services} />
+      </div>
     </div>
   );
 }
