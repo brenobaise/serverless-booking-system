@@ -2,3 +2,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Ensure no global styles override Tailwind */
+/* global.css */
+html,
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
