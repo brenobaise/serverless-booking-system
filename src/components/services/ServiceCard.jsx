@@ -1,7 +1,11 @@
-// src/components/ServiceCard.jsx
+import { useState } from "react";
+import BookingForm from "../bookings/BookingForm.jsx";
+
 export default function ServiceCard({ service }) {
+  const [showForm, setShowForm] = useState(false);
+
   return (
-    <div className="flex flex-col md:flex-row border p-4 rounded shadow-md gap-4 max-w-lg bg-white">
+    <div className="flex flex-col border p-4 rounded shadow-md gap-4 max-w-lg bg-white">
       <img
         className="w-44 h-44 object-cover rounded"
         src="testimage.jpg"
@@ -13,6 +17,13 @@ export default function ServiceCard({ service }) {
         <p className="text-gray-600">
           Price: ${service.price} | Duration: {service.duration} mins
         </p>
+        <button
+          className="bg-blue-600 text-white rounded p-2 mt-4 hover:bg-blue-700"
+          onClick={() => setShowForm(!showForm)}
+        >
+          {showForm ? "Hide Form" : "Book Now"}
+        </button>
+        {showForm && <BookingForm service={service} />}
       </div>
     </div>
   );

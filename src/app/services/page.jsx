@@ -29,8 +29,8 @@ export default function ServicesPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex justify-center min-h-full overflow-auto">
-      <div className="w-full max-w-6xl">
+    <div className="flex justify-center overflow-auto">
+      <div className="  bg-cyan-400">
         <ServiceList services={services} />
       </div>
     </div>
