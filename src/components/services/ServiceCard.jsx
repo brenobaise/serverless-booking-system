@@ -5,9 +5,9 @@ export default function ServiceCard({ service }) {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="flex flex-col border p-4 rounded shadow-md gap-4 max-w-lg bg-white">
+    <div className="flex flex-col border p-4 rounded shadow-md gap-4 bg-white w-full sm:max-w-md lg:max-w-lg">
       <img
-        className="w-44 h-44 object-cover rounded"
+        className="w-full h-44 object-cover rounded"
         src="testimage.jpg"
         alt={service.name}
       />

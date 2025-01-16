@@ -17,10 +17,10 @@ export default function FetchBookingsByEmail() {
       }
       const data = await response.json();
       setBookings(data);
-      setError(null); // Clear previous errors
+      setError(null);
     } catch (err) {
       setError(err.message);
-      setBookings([]); // Clear previous data
+      setBookings([]);
     }
   };
 

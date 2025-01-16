@@ -4,7 +4,7 @@ export default function AdminServiceCard({ service }) {
   }
 
   return (
-    <div className="border rounded-lg shadow-md p-6 max-w-md mx-auto bg-cyan-200">
+    <div className="flex flex-col border p-4 rounded shadow-md gap-4 bg-white w-full sm:max-w-md lg:max-w-lg">
       <div className="mb-4">
         <h2 className="text-lg font-bold text-gray-800">{service.name}</h2>
         <p className="text-sm text-gray-500">{service.small_description}</p>
@@ -33,19 +33,19 @@ export default function AdminServiceCard({ service }) {
       </div>
 
       {/* Images */}
-      <div className="mt-4 grid grid-cols-2 gap-4">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
         {service.sm_img_url && (
           <img
             src={service.sm_img_url}
             alt={service.name}
-            className="h-20 w-full object-cover rounded-lg shadow-sm"
+            className="h-32 w-full object-cover rounded-lg shadow-sm"
           />
         )}
         {service.xl_img_url && (
           <img
             src={service.xl_img_url}
             alt={service.name}
-            className="h-20 w-full object-cover rounded-lg shadow-sm"
+            className="h-32 w-full object-cover rounded-lg shadow-sm"
           />
         )}
       </div>

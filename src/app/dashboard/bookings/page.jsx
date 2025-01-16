@@ -30,5 +30,9 @@ export default function DashboardBookingPage() {
     return <p className="text-center text-gray-500">Loading bookings...</p>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
-  return <BookingList bookings={bookings} />;
+  return (
+    <div className="container mx-auto p-6">
+      <BookingList bookings={bookings} />;
+    </div>
+  );
 }

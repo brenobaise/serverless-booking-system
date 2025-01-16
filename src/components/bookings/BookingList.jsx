@@ -1,5 +1,4 @@
 import BookingCard from "@/components/bookings/BookingCard";
-import Sidebar from "../Sidebar";
 
 export default function BookingList({ bookings }) {
   if (!Array.isArray(bookings) || bookings.length === 0) {
@@ -7,7 +6,7 @@ export default function BookingList({ bookings }) {
   }
 
   return (
-    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6  ">
+    <ul className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 p-4">
       {bookings.map((booking) => (
         <BookingCard key={booking._id} bookings={booking} />
       ))}

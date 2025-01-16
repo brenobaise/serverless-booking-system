@@ -1,6 +1,6 @@
 export default function BookingCard({ bookings }) {
   return (
-    <li className="flex flex-col w-full max-w-sm p-4 border rounded-lg shadow-lg bg-white gap-4">
+    <li className="flex flex-col border p-4 rounded shadow-md gap-4 min-w-lg bg-white w-full sm:max-w-md lg:max-w-lg">
       <div className="text-left">
         <p className="text-lg font-semibold text-gray-800">
           Email: {bookings.user_email}

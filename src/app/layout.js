@@ -8,13 +8,10 @@ import Footer from "@/components/Footer";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col min-h-screen">
         <SessionProvider>
-          <div className="flex flex-col w-full">
-            <Header />
-            <main>{children}</main>
-            <Footer />
-          </div>
+          <Header />
+          <main className="flex-grow bg-gray-100 p-6">{children}</main>
         </SessionProvider>
       </body>
     </html>

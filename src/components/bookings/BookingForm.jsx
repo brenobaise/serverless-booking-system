@@ -35,7 +35,7 @@ export default function BookingForm({ service }) {
   };
 
   return (
-    <div className="border p-4 rounded shadow-md max-w-md bg-white">
+    <div className="border p-4 rounded shadow-md max-w-md bg-white w-full sm:w-96">
       <h2 className="text-xl font-bold mb-4">Book {service.name}</h2>
       {success && <p className="text-green-600 mb-4">Booking successful!</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}

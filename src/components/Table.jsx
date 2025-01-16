@@ -5,23 +5,25 @@ export default function Table() {
   ];
 
   return (
-    <table className="table-auto w-full border-collapse border border-gray-200">
-      <thead>
-        <tr className="bg-gray-100">
-          <th className="border p-2">Service</th>
-          <th className="border p-2">Date</th>
-          <th className="border p-2">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, index) => (
-          <tr key={index} className="hover:bg-gray-50">
-            <td className="border p-2">{row.service}</td>
-            <td className="border p-2">{row.date}</td>
-            <td className="border p-2">{row.total}</td>
+    <div className="overflow-x-auto">
+      <table className="table-auto w-full border-collapse border border-gray-200">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border p-2 text-sm md:text-base">Service</th>
+            <th className="border p-2 text-sm md:text-base">Date</th>
+            <th className="border p-2 text-sm md:text-base">Total</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((row, index) => (
+            <tr key={index} className="hover:bg-gray-50">
+              <td className="border p-2 text-sm md:text-base">{row.service}</td>
+              <td className="border p-2 text-sm md:text-base">{row.date}</td>
+              <td className="border p-2 text-sm md:text-base">{row.total}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
