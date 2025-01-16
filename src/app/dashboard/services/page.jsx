@@ -4,8 +4,11 @@ import "@/app/styles/global.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceList from "@/components/services/ServiceList";
+import Button from "@/components/Button";
+import ServiceForm from "@/components/services/ServiceForm";
 
 export default function DashboardServicePage() {
+  const [showForm, setShowForm] = useState(false);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -58,6 +61,13 @@ export default function DashboardServicePage() {
 
   return (
     <div className="container mx-auto p-6 ">
+      <Button
+        onClick={() => setShowForm(!showForm)}
+        size="large"
+        className="bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600"
+        children={"Add Service"}
+      />
+      {showForm && <ServiceForm />}
       <ServiceList
         services={services}
         isAdmin={true}

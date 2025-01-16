@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "../Button";
 
 export default function AdminServiceCard({ service, onEdit, onDelete }) {
   const [isEditing, setIsEditing] = useState(false); // Toggle for edit mode
@@ -72,18 +73,18 @@ export default function AdminServiceCard({ service, onEdit, onDelete }) {
             />
           </div>
           <div className="flex gap-4 justify-end">
-            <button
+            <Button
+              children="Save"
               onClick={handleSave}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-            >
-              Save
-            </button>
-            <button
+              size="medium"
+              variant="success"
+            />
+            <Button
+              children="Cancel"
               onClick={() => setIsEditing(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            >
-              Cancel
-            </button>
+              size="medium"
+              variant="secondary"
+            />
           </div>
         </div>
       ) : (
@@ -97,9 +98,6 @@ export default function AdminServiceCard({ service, onEdit, onDelete }) {
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 text-sm text-gray-700">
-            <p>
-              <span className="font-semibold">ID:</span> {service._id}
-            </p>
             <p>
               <span className="font-semibold">Large Description:</span>{" "}
               {service.large_description || "N/A"}
@@ -126,29 +124,23 @@ export default function AdminServiceCard({ service, onEdit, onDelete }) {
                 className="h-40 w-full object-cover rounded-lg shadow-md"
               />
             )}
-            {service.xl_img_url && (
-              <img
-                src={service.xl_img_url}
-                alt={`${service.name} - Large Image`}
-                className="h-40 w-full object-cover rounded-lg shadow-md"
-              />
-            )}
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-6 flex gap-4 justify-end">
-            <button
+          <div className="mt-4 flex gap-20 justify-evenly">
+            <Button
+              children="Edit"
               onClick={() => setIsEditing(true)}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-              Edit
-            </button>
-            <button
+              size="medium"
+              className="bg-slate-400 transition ease-in-out delay-350"
+            />
+
+            <Button
+              children="Delete"
               onClick={() => onDelete(service._id)}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Delete
-            </button>
+              variant="danger"
+              size="medium"
+            />
           </div>
         </>
       )}

@@ -2,8 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
+import Button from "./Button";
+import { signOut, signIn } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -12,11 +12,11 @@ export default function Header() {
   const isAdmin = session?.user?.role === "admin";
 
   return (
-    <div className="bg-blue-600 flex flex-col sm:flex-row sm:justify-between sm:items-center p-4">
+    <div className="bg-black flex flex-col sm:flex-row sm:justify-between sm:items-center p-4">
       {/* Title Section */}
       <div className="flex justify-center sm:justify-start">
         <h1 className="text-bold text-white text-2xl sm:text-4xl text-center">
-          Our Services
+          Booking SeSy
         </h1>
       </div>
 
@@ -42,10 +42,22 @@ export default function Header() {
       <div className="mt-4 sm:mt-0 flex justify-center">
         {session ? (
           isAdmin ? (
-            <LogoutButton />
+            <Button
+              children="Logout"
+              onClick={() => signOut()}
+              size="medium"
+              variant="danger"
+              className=" transition ease-in delay-150 hover:font-medium hover:bg-opacity-85"
+            />
           ) : null // Non-admin users don't see any buttons
         ) : (
-          <LoginButton /> // Show login button for unauthenticated users
+          <Button
+            children="Login"
+            onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+            size="medium"
+            variant="success"
+            className="transition ease-in delay-150 hover:font-medium "
+          />
         )}
       </div>
     </div>
