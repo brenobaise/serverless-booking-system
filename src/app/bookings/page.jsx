@@ -11,7 +11,8 @@ export default function FetchBookings() {
       const response = await fetch(`/api/bookings/${email}`);
       if (!response.ok) {
         throw new Error(
-          (await response.json().error) || "Failed to fetch bookings."
+          (await response.json().error) ||
+            `No bookings where found under this email: ${email}`
         );
       }
       const data = await response.json();
