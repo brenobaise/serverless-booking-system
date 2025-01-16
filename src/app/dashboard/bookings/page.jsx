@@ -3,7 +3,6 @@
 import BookingList from "@/components/bookings/BookingList";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Sidebar from "@/components/Sidebar";
 
 export default function DashboardBookingPage() {
   const [bookings, setBookings] = useState([]);
