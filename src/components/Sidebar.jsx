@@ -14,7 +14,7 @@ export default function Sidebar() {
           </li>
           <li>
             <a
-              href="/api/services"
+              href="/dashboard/services"
               className="block hover:bg-blue-700 p-2 rounded"
             >
               Services

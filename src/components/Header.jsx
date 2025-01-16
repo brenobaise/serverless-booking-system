@@ -19,7 +19,7 @@ export default function Header() {
       <div>
         {session ? (
           isAdmin ? (
-            <LogoutButton /> // Only show logout for admin
+            <LogoutButton />
           ) : null // Non-admin users don't see any buttons
         ) : (
           <LoginButton /> // Show login button for unauthenticated users

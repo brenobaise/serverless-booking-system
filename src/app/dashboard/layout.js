@@ -1,5 +1,4 @@
 import "../styles/global.css"; // Tailwind global styles
-import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -22,9 +21,7 @@ export default async function DashboardLayout({ children }) {
       <Sidebar />
 
       {/* Main content area */}
-      <div className="flex flex-col flex-grow">
-        <main className="p-6 bg-gray-100 flex-grow">{children}</main>
-      </div>
+      <main className=" ">{children}</main>
     </div>
   );
 }
