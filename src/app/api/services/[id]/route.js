@@ -36,6 +36,52 @@ export async function GET(req, { params }) {
   }
 }
 
+export async function PUT(req, { params }) {
+  const { id } = params;
+  const {
+    name,
+    small_description,
+    large_description,
+    price,
+    duration,
+    isAvailable,
+  } = await req.json();
+
+  // Validate the ID format (ObjectID format)
+  if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
+    return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
+  }
+
+  try {
+    await connectToDatabase();
+
+    const updatedService = await Service.findByIdAndUpdate(
+      id,
+      {
+        name,
+        small_description,
+        large_description,
+        price,
+        duration,
+        isAvailable,
+      },
+      { new: true, runValidators: true } // Return the updated document and validate input
+    );
+
+    if (!updatedService) {
+      return new Response(JSON.stringify({ error: "Service not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify(updatedService), { status: 200 });
+  } catch (err) {
+    console.error("Error updating service:", err.message);
+    return new Response(JSON.stringify({ error: "Failed to update service" }), {
+      status: 500,
+    });
+  }
+}
 // DELETE api/services/:id
 // Admin route only
 export async function DELETE(req, { params }) {
