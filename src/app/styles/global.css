@@ -3,12 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ensure no global styles override Tailwind */
-/* global.css */
 * {
   padding: 0;
   margin: 0;
-}
-body {
-  height: 100%;
 }
