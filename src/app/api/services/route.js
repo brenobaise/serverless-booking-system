@@ -10,7 +10,6 @@ export async function GET(req) {
     await connectToDatabase();
 
     const services = await Service.find({ isAvailable: true });
-    console.log(services);
     return NextResponse.json(services, { status: 200 });
   } catch (error) {
     console.error("Error fetching services:", error.message);
