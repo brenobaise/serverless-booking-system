@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function FetchBookings() {
+export default function FetchBookingsByEmail() {
   const [email, setEmail] = useState("");
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState(null);

@@ -30,7 +30,7 @@ export default function DashboardServicePage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className=" h-dvh bg-cyan-400">
+    <div className=" h-dvh ">
       <ServiceList services={services} isAdmin={true} />
     </div>
   );

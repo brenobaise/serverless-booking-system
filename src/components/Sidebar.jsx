@@ -22,7 +22,7 @@ export default function Sidebar() {
           </li>
           <li>
             <a
-              href="/api/bookings"
+              href="/dashboard/bookings"
               className="block hover:bg-blue-700 p-2 rounded"
             >
               Bookings

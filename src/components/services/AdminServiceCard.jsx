@@ -4,7 +4,7 @@ export default function AdminServiceCard({ service }) {
   }
 
   return (
-    <div className="border rounded-lg shadow-md p-6 bg-white max-w-md mx-auto">
+    <div className="border rounded-lg shadow-md p-6 max-w-md mx-auto bg-cyan-200">
       <div className="mb-4">
         <h2 className="text-lg font-bold text-gray-800">{service.name}</h2>
         <p className="text-sm text-gray-500">{service.small_description}</p>
