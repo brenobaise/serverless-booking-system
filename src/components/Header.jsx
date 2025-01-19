@@ -22,6 +22,14 @@ export default function Header() {
 
       {/* Navigation Links */}
       <nav className="flex flex-col sm:flex-row sm:gap-6 mt-4 sm:mt-0 items-center justify-center">
+        {/* {isAdmin && (
+          <Link
+            href="/dashboard/services"
+            className="text-white text-lg hover:underline"
+          >
+            Services
+          </Link>
+        )} */}
         <Link href="/services" className="text-white text-lg hover:underline">
           Services
         </Link>

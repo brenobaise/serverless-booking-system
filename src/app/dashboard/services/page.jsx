@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceList from "@/components/services/ServiceList";
 import Button from "@/components/Button";
-import ServiceForm from "@/components/services/ServiceForm";
+import NewServiceForm from "@/components/services/NewServiceForm";
 
 export default function DashboardServicePage() {
   const [showForm, setShowForm] = useState(false);
@@ -17,11 +17,12 @@ export default function DashboardServicePage() {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/api/services");
+        const response = await axios.get("/api/dashboard/services");
         setServices(response.data);
       } catch (err) {
         setError("Failed to fetch services.");
         console.error(err.message);
+        console.log(err.message);
       } finally {
         setLoading(false);
       }
@@ -31,7 +32,7 @@ export default function DashboardServicePage() {
   const handleEdit = async (updatedService) => {
     try {
       const response = await axios.put(
-        `/api/services/${updatedService._id}`,
+        `/api/dashboard/services/${updatedService._id}`,
         updatedService
       );
       setServices((prev) =>
@@ -47,7 +48,7 @@ export default function DashboardServicePage() {
 
   const handleDelete = async (serviceId) => {
     try {
-      await axios.delete(`/api/services/${serviceId}`);
+      await axios.delete(`/api/dashboard/services/${serviceId}`);
       setServices((prevServices) =>
         prevServices.filter((service) => service._id !== serviceId)
       );
@@ -67,7 +68,7 @@ export default function DashboardServicePage() {
         className="bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600"
         children={"Add Service"}
       />
-      {showForm && <ServiceForm />}
+      {showForm && <NewServiceForm />}
       <ServiceList
         services={services}
         isAdmin={true}

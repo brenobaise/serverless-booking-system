@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-// GET api/services/:id
+// Admin GET api/dashboard/services/:id
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
@@ -36,6 +36,7 @@ export async function GET(req, { params }) {
   }
 }
 
+// Admin  POST api/dashboard/services/:id
 export async function PUT(req, { params }) {
   const { id } = params;
   const {
@@ -54,6 +55,14 @@ export async function PUT(req, { params }) {
 
   try {
     await connectToDatabase();
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized: Admin access only" },
+        { status: 401 }
+      );
+    }
 
     const updatedService = await Service.findByIdAndUpdate(
       id,
@@ -82,12 +91,10 @@ export async function PUT(req, { params }) {
     });
   }
 }
-// DELETE api/services/:id
-// Admin route only
+// Admin  DELETE api/dashboard/services/:id
 export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
-
     const session = await getServerSession(authOptions);
 
     if (!session || session.user.role !== "admin") {
