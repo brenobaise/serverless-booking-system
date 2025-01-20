@@ -15,11 +15,13 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-row h-dvh border-5 border-red-500">
-      <div>
+    <div className="flex  ">
+      <div className="">
         <Sidebar />
       </div>
-      <main className="">{children}</main>
+      <div className="">
+        <main className="">{children}</main>
+      </div>
     </div>
   );
 }

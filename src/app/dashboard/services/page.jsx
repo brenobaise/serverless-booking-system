@@ -1,4 +1,3 @@
-// src/app/services/page.jsx
 "use client";
 import "@/app/styles/global.css";
 import React, { useEffect, useState } from "react";
@@ -13,22 +12,26 @@ export default function DashboardServicePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Function to fetch services
+  const fetchServices = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/dashboard/services");
+      setServices(response.data);
+    } catch (err) {
+      setError("Failed to fetch services.");
+      console.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch services on mount
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("/api/dashboard/services");
-        setServices(response.data);
-      } catch (err) {
-        setError("Failed to fetch services.");
-        console.error(err.message);
-        console.log(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchServices();
   }, []);
+
+  // Handle editing a service
   const handleEdit = async (updatedService) => {
     try {
       const response = await axios.put(
@@ -46,6 +49,7 @@ export default function DashboardServicePage() {
     }
   };
 
+  // Handle deleting a service
   const handleDelete = async (serviceId) => {
     try {
       await axios.delete(`/api/dashboard/services/${serviceId}`);
@@ -57,24 +61,53 @@ export default function DashboardServicePage() {
       console.error("Failed to delete service:", err.message);
     }
   };
+
+  // Handle adding a new service
+  const handleServiceAdded = () => {
+    fetchServices(); // Refresh the list of services
+    setShowForm(false); // Close the form after submission
+  };
+
+  // Toggle between form and service list
+  const toggleShowForm = () => {
+    setShowForm((prev) => !prev);
+  };
+
+  // Render loading or error states
   if (loading) return <p>Loading services...</p>;
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="container mx-auto p-6 ">
-      <Button
-        onClick={() => setShowForm(!showForm)}
-        size="large"
-        className="bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600"
-        children={"Add Service"}
-      />
-      {showForm && <NewServiceForm />}
-      <ServiceList
-        services={services}
-        isAdmin={true}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+    <div className=" flex justify-center ">
+      <div>
+        <Button
+          onClick={toggleShowForm}
+          size="medium"
+          className=" bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600"
+        >
+          {showForm ? "Back " : "Add Service"}
+        </Button>
+      </div>
+      <div className="flex  flex-row justify-between items-center">
+        {/* Form Section */}
+        {showForm && (
+          <div className="  w-full max-w-lg">
+            <NewServiceForm onServiceAdded={handleServiceAdded} />
+          </div>
+        )}
+
+        {/* Service List Section */}
+        {!showForm && (
+          <div className="  flex">
+            <ServiceList
+              services={services}
+              isAdmin={true}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
