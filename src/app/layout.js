@@ -3,7 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 // import Header from "@/components/Header";
 import Header from "@/components/Header";
-import Footer from "@/components/new-components/Footer";
+import Footer from "@/components/Footer";
 
 import "./styles/global.css";
 

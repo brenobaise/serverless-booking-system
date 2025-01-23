@@ -3,9 +3,9 @@ import "@/app/styles/global.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceList from "@/components/services/ServiceList";
-import Button from "@/components/Button";
+import Button from "@/components/bookings/UI/Button";
 import NewServiceForm from "@/components/services/NewServiceForm";
-import Dialog from "@/components/new-components/Dialog"; // Import Dialog component
+import Dialog from "@/components/bookings/UI/Dialog"; // Import Dialog component
 
 export default function DashboardServicePage() {
   const [showForm, setShowForm] = useState(false);

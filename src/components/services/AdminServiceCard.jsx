@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../Button";
+import Button from "../bookings/UI/Button";
 
 export default function AdminServiceCard({ service, onEdit, onDelete }) {
   const [isEditing, setIsEditing] = useState(false); // Toggle for edit mode

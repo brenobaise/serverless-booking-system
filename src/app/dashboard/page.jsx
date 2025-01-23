@@ -1,5 +1,5 @@
 "use client";
-import Dialog from "@/components/new-components/Dialog";
+import Dialog from "@/components/bookings/UI/Dialog";
 
 export default function DashboardPage() {
   return (

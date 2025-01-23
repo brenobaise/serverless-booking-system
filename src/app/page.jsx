@@ -1,10 +1,10 @@
 import Link from "next/link"; // Import the Link component
 import "@/app/styles/global.css";
-import Button from "@/components/Button";
+import Button from "@/components/bookings/UI/Button";
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center  min-h-screen">
       <div className="text-center">
         <Link href="/services">
           <Button

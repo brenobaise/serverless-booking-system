@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
-import Button from "../Button";
+import Button from "./UI/Button";
 
 export default function BookingForm({ service }) {
   const [email, setEmail] = useState("");

@@ -1,24 +1,27 @@
-export default function BookingCard({ bookings }) {
+/* eslint-disable react/prop-types */
+function BookingCard({ bookings }) {
   return (
-    <li className="flex flex-col border p-4 rounded shadow-md gap-4 min-w-lg bg-white w-full sm:max-w-md lg:max-w-lg">
-      <div className="text-left">
-        <p className="text-lg font-semibold text-gray-800">
-          Email: {bookings.user_email}
-        </p>
-        <p className="text-sm text-gray-600">
+    <div
+      className="flex flex-row flex-wrap p-6 m-4 
+           max-h-[200px] bg-slate-200
+          text-black font-medium rounded-lg shadow-md shadow-slate-550"
+    >
+      <div className=" text-left">
+        <p className="text-lg font-semibold ">Email: {bookings.user_email}</p>
+        <p className="text-sm">
           Date Placed:{" "}
           {new Date(bookings.booking_date_placed).toLocaleDateString()}
         </p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm ">
           Slot Date: {new Date(bookings.slot_date).toLocaleDateString()}
         </p>
-        <p className="text-sm text-gray-600">
-          Service ID: {bookings.Service_id}
-        </p>
-        <p className="text-sm text-gray-800 font-medium">
+        <p className="text-sm ">Service ID: {bookings.Service_id}</p>
+        <p className="text-sm  font-medium">
           Total Price: ${bookings.total_price}
         </p>
       </div>
-    </li>
+    </div>
   );
 }
+
+export default BookingCard;

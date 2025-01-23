@@ -1,5 +1,4 @@
-import BookingCard from "../new-components/booking/BookingCard";
-
+import BookingCard from "./BookingCard";
 export default function BookingList({ bookings }) {
   if (!Array.isArray(bookings) || bookings.length === 0) {
     return <p className="text-center text-gray-500">No bookings available.</p>;

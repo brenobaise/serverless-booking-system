@@ -2,7 +2,7 @@ import "../styles/global.css"; // Tailwind global styles
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation"; // Import redirect utility
-import Sidebar from "@/components/new-components/SideBar.jsx";
+import Sidebar from "@/components/Sidebar/SideBar";
 
 export default async function DashboardLayout({ children }) {
   // Get the session

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/Button";
+import Button from "@/components/bookings/UI/Button";
 
 export default function FetchBookingsByEmail() {
   const [email, setEmail] = useState("");

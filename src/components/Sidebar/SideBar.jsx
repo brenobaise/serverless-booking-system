@@ -1,4 +1,4 @@
-import SidebarItem from "./Sidebar/SideBarItem";
+import SidebarItem from "@/components/Sidebar/SideBarItem";
 
 function SideBar() {
   return (

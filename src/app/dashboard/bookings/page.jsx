@@ -1,7 +1,7 @@
 // DashboardBookingPage.jsx
 "use client";
 import BookingList from "@/components/bookings/BookingList";
-import Dialog from "@/components/new-components/Dialog";
+import Dialog from "@/components/bookings/UI/Dialog";
 import { useState, useEffect } from "react";
 import axios from "axios";
 

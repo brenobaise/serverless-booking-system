@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BookingForm from "../bookings/BookingForm.jsx";
-import Button from "../Button.jsx";
+import Button from "../bookings/UI/Button.jsx";
 
 export default function ServiceCard({ service }) {
   const [showForm, setShowForm] = useState(false);
