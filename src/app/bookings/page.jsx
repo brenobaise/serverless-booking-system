@@ -26,7 +26,7 @@ export default function FetchBookingsByEmail() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 h-[600px]">
       <input
         type="email"
         value={email}

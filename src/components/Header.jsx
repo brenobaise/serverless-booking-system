@@ -12,11 +12,11 @@ export default function Header() {
   const isAdmin = session?.user?.role === "admin";
 
   return (
-    <div className="bg-black flex flex-col sm:flex-row sm:justify-between sm:items-center p-4">
+    <div className="bg-slate-900  flex flex-col sm:flex-row sm:justify-between sm:items-center p-4">
       {/* Title Section */}
       <div className="flex justify-center sm:justify-start">
         <h1 className="text-bold text-white text-2xl sm:text-4xl text-center">
-          Booking SeSy
+          A Serverless Booking System
         </h1>
       </div>
 

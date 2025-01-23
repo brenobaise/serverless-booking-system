@@ -1,6 +1,7 @@
 // DashboardBookingPage.jsx
 "use client";
 import BookingList from "@/components/bookings/BookingList";
+import Dialog from "@/components/new-components/Dialog";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -30,8 +31,13 @@ export default function DashboardBookingPage() {
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto p-6">
-      <BookingList bookings={bookings} />;
+    <div className="flex flex-row">
+      {console.log(bookings)}
+      <Dialog>
+        <div className="flex flex-col justify-center items-center">
+          <BookingList bookings={bookings} />
+        </div>
+      </Dialog>
     </div>
   );
 }
