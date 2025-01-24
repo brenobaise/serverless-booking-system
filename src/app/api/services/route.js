@@ -1,7 +1,5 @@
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 
 // User GET ./api/services

@@ -30,5 +30,35 @@ const BookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Define a static method for aggregation
+BookingSchema.statics.withServiceDetails = function () {
+  return this.aggregate([
+    {
+      $lookup: {
+        from: "services", // Name of the Service collection
+        localField: "Service_id", // Field in Booking that references Service
+        foreignField: "_id", // Field in Service that matches localField
+        as: "serviceDetails", // Output array containing matched Service documents
+      },
+    },
+    {
+      $unwind: {
+        path: "$serviceDetails", // Unwind the serviceDetails array
+        preserveNullAndEmptyArrays: true, // Keep bookings even if no matching service is found
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        user_email: 1,
+        booking_date_placed: 1,
+        slot_date: 1,
+        serviceName: "$serviceDetails.name", // Include the service name
+        total_price: 1,
+      },
+    },
+  ]);
+};
+
 export default mongoose.models.Booking ||
   mongoose.model("Booking", BookingSchema);

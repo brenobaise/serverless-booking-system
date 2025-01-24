@@ -18,7 +18,7 @@ export async function GET(req) {
     );
   }
 
-  const bookings = await Booking.find({});
+  const bookings = await Booking.withServiceDetails();
   return new Response(JSON.stringify(bookings), { status: 200 });
 }
 

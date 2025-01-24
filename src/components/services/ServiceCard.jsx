@@ -16,7 +16,7 @@ export default function ServiceCard({ service }) {
         <h2 className="text-xl font-bold">{service.name}</h2>
         <p>{service.small_description}</p>
         <p className="text-gray-600">
-          Price: ${service.price} | Duration: {service.duration} mins
+          Price: £{service.price} | Duration: {service.duration} mins
         </p>
         <Button
           children={showForm ? "Hide Form" : "Book Now"}
