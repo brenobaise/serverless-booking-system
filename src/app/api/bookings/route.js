@@ -1,13 +1,13 @@
 import connectToDatabase from "@/lib/mongoose";
 import Booking from "@/app/models/Booking";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { validateBookingData } from "@/lib/validators/bookingValidation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // GET api/bookings => gets all available bookings
 // Admin Only Route ?
-export async function GET(req) {
+export async function GET() {
   await connectToDatabase();
   const session = await getServerSession(authOptions);
 
@@ -29,6 +29,7 @@ export async function POST(req) {
 
     const data = await req.json();
     const validationError = await validateBookingData(data);
+    console.log(`INSIDE api/bookings ${JSON.stringify(data)}`);
 
     if (validationError) {
       return NextResponse.json({ error: validationError }, { status: 400 });

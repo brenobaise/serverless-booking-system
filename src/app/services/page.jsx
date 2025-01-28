@@ -31,10 +31,8 @@ export default function ServicesPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    // <div className="flex justify-center overflow-auto">
     <div className=" container mx-auto p-6">
       <ServiceList services={services} />
     </div>
-    // </div>
   );
 }

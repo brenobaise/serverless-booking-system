@@ -23,6 +23,10 @@ export default function BookingForm({ service }) {
         Service_id: service._id,
         total_price,
       });
+
+      console.log(` Inside Booking Form ${service.service_id}`);
+      console.log(` Inside Booking Form ${service.name}`);
+      console.log(`Service array ${service}`);
       if (response.status === 201) {
         setSuccess(true);
         setEmail("");

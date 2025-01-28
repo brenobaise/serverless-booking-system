@@ -35,10 +35,10 @@ BookingSchema.statics.withServiceDetails = function () {
   return this.aggregate([
     {
       $lookup: {
-        from: "services", // Name of the Service collection
-        localField: "Service_id", // Field in Booking that references Service
-        foreignField: "_id", // Field in Service that matches localField
-        as: "serviceDetails", // Output array containing matched Service documents
+        from: "services",
+        localField: "Service_id",
+        foreignField: "_id",
+        as: "serviceDetails",
       },
     },
     {

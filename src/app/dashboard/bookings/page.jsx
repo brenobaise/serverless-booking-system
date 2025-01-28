@@ -32,7 +32,6 @@ export default function DashboardBookingPage() {
 
   return (
     <div className="flex flex-row">
-      {console.log(bookings)}
       <Dialog>
         <div className="flex flex-col justify-center items-center">
           <BookingList bookings={bookings} />

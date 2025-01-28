@@ -14,9 +14,7 @@ function BookingCard({ bookings }) {
         <p className="text-sm ">
           Slot Date: {new Date(bookings.slot_date).toLocaleDateString()}
         </p>
-        <p className="text-sm font-bold ">
-          Service Name: {bookings.serviceName}
-        </p>
+        <p className="text-sm "></p>
         <p className="text-sm font-medium">
           Total Price: ${bookings.total_price}
         </p>
