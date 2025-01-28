@@ -2,7 +2,7 @@ import "../styles/global.css"; // Tailwind global styles
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation"; // Import redirect utility
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar/SideBar";
 
 export default async function DashboardLayout({ children }) {
   // Get the session
@@ -15,10 +15,8 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-row h-dvh border-5 border-red-500">
-      <div>
-        <Sidebar />
-      </div>
+    <div className="flex flex-row p-6 ">
+      <Sidebar />
       <main className="">{children}</main>
     </div>
   );

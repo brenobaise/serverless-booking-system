@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Button from "@/components/bookings/UI/Button";
 
 export default function FetchBookingsByEmail() {
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ export default function FetchBookingsByEmail() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 h-[600px]">
       <input
         type="email"
         value={email}
@@ -33,12 +34,13 @@ export default function FetchBookingsByEmail() {
         placeholder="Enter your email"
         className="border p-2 rounded mr-4"
       />
-      <button
+      <Button
+        children="Fetch Bookings"
         onClick={fetchBookings}
-        className="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Fetch Bookings
-      </button>
+        size="medium"
+        variant="primary"
+        className="transition ease-linear delay-150 hover:font-medium"
+      />
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 

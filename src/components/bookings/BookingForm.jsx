@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import Button from "./UI/Button";
 
 export default function BookingForm({ service }) {
   const [email, setEmail] = useState("");
@@ -22,6 +23,10 @@ export default function BookingForm({ service }) {
         Service_id: service._id,
         total_price,
       });
+
+      console.log(` Inside Booking Form ${service.service_id}`);
+      console.log(` Inside Booking Form ${service.name}`);
+      console.log(`Service array ${service}`);
       if (response.status === 201) {
         setSuccess(true);
         setEmail("");
@@ -66,13 +71,13 @@ export default function BookingForm({ service }) {
             className="w-full border rounded p-2"
           />
         </div>
-        <button
-          type="submit"
+        <Button
+          children={loading ? "Booking..." : "Book Now"}
           disabled={loading}
-          className="bg-blue-600 text-white rounded p-2 hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Booking..." : "Book Now"}
-        </button>
+          variant="primary"
+          className="transition ease-linear delay-150 hover:font-medium"
+          type="submit"
+        />
       </form>
     </div>
   );

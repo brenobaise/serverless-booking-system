@@ -1,5 +1,6 @@
 import { useState } from "react";
 import BookingForm from "../bookings/BookingForm.jsx";
+import Button from "../bookings/UI/Button.jsx";
 
 export default function ServiceCard({ service }) {
   const [showForm, setShowForm] = useState(false);
@@ -15,14 +16,16 @@ export default function ServiceCard({ service }) {
         <h2 className="text-xl font-bold">{service.name}</h2>
         <p>{service.small_description}</p>
         <p className="text-gray-600">
-          Price: ${service.price} | Duration: {service.duration} mins
+          Price: £{service.price} | Duration: {service.duration} mins
         </p>
-        <button
-          className="bg-blue-600 text-white rounded p-2 mt-4 hover:bg-blue-700"
+        <Button
+          children={showForm ? "Hide Form" : "Book Now"}
           onClick={() => setShowForm(!showForm)}
-        >
-          {showForm ? "Hide Form" : "Book Now"}
-        </button>
+          size="medium"
+          variant="primary"
+          className="shadow-md shadow-slate-500 transition ease-in delay-150 hover:font-light"
+        />
+
         {showForm && <BookingForm service={service} />}
       </div>
     </div>

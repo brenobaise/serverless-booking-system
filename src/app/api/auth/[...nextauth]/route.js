@@ -32,7 +32,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role; // Add role to the token
+        token.role = user.role || "user"; // Add role to the token
       }
       return token;
     },

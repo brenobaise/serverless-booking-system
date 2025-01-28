@@ -1,9 +1,13 @@
-export default function Footer() {
+function Footer() {
   return (
-    <div className="bg-blue-600 h-52 text-white flex justify-center items-center text-center px-4">
-      <p className="text-sm md:text-base">
-        &copy; {new Date().getFullYear()} Your Company. All rights reserved.
-      </p>
+    <div className="flex flex-row h-[300px] justify-center items-center bg-slate-800">
+      <div className="text-white text-md font-light max-h-[300px] flex flex-col items-center">
+        <p>BEng Software Engineering , University of Westminster</p>
+        <br></br>
+        <hr className="border-1 w-full"></hr>
+        <p className="text-md p-6">Joao BrenoBaise Zaniboni</p>
+      </div>
     </div>
   );
 }
+export default Footer;

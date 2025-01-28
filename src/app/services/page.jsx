@@ -4,6 +4,7 @@ import "../styles/global.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceList from "@/components/services/ServiceList";
+import { getServerSession } from "next-auth";
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -17,6 +18,7 @@ export default function ServicesPage() {
         const response = await axios.get("/api/services");
         setServices(response.data);
       } catch (err) {
+        console.error(err.message);
         setError("Failed to fetch services.");
       } finally {
         setLoading(false);
@@ -29,10 +31,8 @@ export default function ServicesPage() {
   if (error) return <p>{error}</p>;
 
   return (
-    // <div className="flex justify-center overflow-auto">
     <div className=" container mx-auto p-6">
       <ServiceList services={services} />
     </div>
-    // </div>
   );
 }

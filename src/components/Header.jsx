@@ -2,8 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
+import Button from "./bookings/UI/Button";
+import { signOut, signIn } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -12,26 +12,35 @@ export default function Header() {
   const isAdmin = session?.user?.role === "admin";
 
   return (
-    <div className="bg-blue-600 flex flex-col sm:flex-row sm:justify-between sm:items-center p-4">
+    <div
+      className="bg-slate-900  p-4 flex flex-col 
+    sm:flex-row sm:justify-between sm:items-center "
+    >
       {/* Title Section */}
-      <div className="flex justify-center sm:justify-start">
+      <div className=" flex justify-start sm:justify-start  ">
         <h1 className="text-bold text-white text-2xl sm:text-4xl text-center">
-          Our Services
+          A Serverless Booking System
         </h1>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col sm:flex-row sm:gap-6 mt-4 sm:mt-0 items-center justify-center">
-        <Link href="/services" className="text-white text-lg hover:underline">
+      <nav className="flex mt-4 flex-col sm:flex-row sm:gap-6 sm:mt-4">
+        <Link
+          href="/services"
+          className="text-white text-lg border-b-2 border-transparent hover:border-slate-300"
+        >
           Services
         </Link>
-        <Link href="/bookings" className="text-white text-lg hover:underline">
+        <Link
+          href="/bookings"
+          className="text-white text-lg border-b-2 border-transparent hover:border-slate-300"
+        >
           Bookings
         </Link>
         {isAdmin && (
           <Link
             href="/dashboard"
-            className="text-white text-lg hover:underline"
+            className="text-white text-lg border-b-2 border-transparent hover:border-slate-300"
           >
             Dashboard
           </Link>
@@ -42,10 +51,22 @@ export default function Header() {
       <div className="mt-4 sm:mt-0 flex justify-center">
         {session ? (
           isAdmin ? (
-            <LogoutButton />
+            <Button
+              children="Logout"
+              onClick={() => signOut()}
+              size="medium"
+              variant="danger"
+              className=" transition ease-in delay-150 hover:font-medium hover:bg-opacity-85"
+            />
           ) : null // Non-admin users don't see any buttons
         ) : (
-          <LoginButton /> // Show login button for unauthenticated users
+          <Button
+            children="Login"
+            onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+            size="medium"
+            variant="success"
+            className="transition ease-in delay-150 hover:font-medium "
+          />
         )}
       </div>
     </div>

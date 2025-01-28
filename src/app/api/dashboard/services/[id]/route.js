@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-// GET api/services/:id
+// Admin GET api/dashboard/services/:id
 export async function GET(req, { params }) {
   try {
     await connectToDatabase();
@@ -36,12 +36,65 @@ export async function GET(req, { params }) {
   }
 }
 
-// DELETE api/services/:id
-// Admin route only
+// Admin  POST api/dashboard/services/:id
+export async function PUT(req, { params }) {
+  const { id } = params;
+  const {
+    name,
+    small_description,
+    large_description,
+    price,
+    duration,
+    isAvailable,
+  } = await req.json();
+
+  // Validate the ID format (ObjectID format)
+  if (!id || !id.match(/^[0-9a-fA-F]{24}$/)) {
+    return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
+  }
+
+  try {
+    await connectToDatabase();
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Unauthorized: Admin access only" },
+        { status: 401 }
+      );
+    }
+
+    const updatedService = await Service.findByIdAndUpdate(
+      id,
+      {
+        name,
+        small_description,
+        large_description,
+        price,
+        duration,
+        isAvailable,
+      },
+      { new: true, runValidators: true } // Return the updated document and validate input
+    );
+
+    if (!updatedService) {
+      return new Response(JSON.stringify({ error: "Service not found" }), {
+        status: 404,
+      });
+    }
+
+    return new Response(JSON.stringify(updatedService), { status: 200 });
+  } catch (err) {
+    console.error("Error updating service:", err.message);
+    return new Response(JSON.stringify({ error: "Failed to update service" }), {
+      status: 500,
+    });
+  }
+}
+// Admin  DELETE api/dashboard/services/:id
 export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
-
     const session = await getServerSession(authOptions);
 
     if (!session || session.user.role !== "admin") {
