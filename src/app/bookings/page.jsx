@@ -50,7 +50,7 @@ export default function FetchBookingsByEmail() {
             <li key={booking._id} className="border p-4 rounded shadow">
               <p>
                 <strong>Service:</strong>{" "}
-                {booking.Service_id?.name || "Unknown"}
+                {booking.serviceName || "Unknown"}
               </p>
               <p>
                 <strong>Date:</strong>{" "}

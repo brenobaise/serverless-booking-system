@@ -59,6 +59,37 @@ BookingSchema.statics.withServiceDetails = function () {
     },
   ]);
 };
+BookingSchema.statics.withServiceDetailsByEmail = function (email) {
+  return this.aggregate([
+    {
+      $match: { user_email: email },
+    },
+    {
+      $lookup: {
+        from: "services", // Collection name in MongoDB
+        localField: "Service_id",
+        foreignField: "_id",
+        as: "serviceDetails",
+      },
+    },
+    {
+      $unwind: {
+        path: "$serviceDetails",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        user_email: 1,
+        booking_date_placed: 1,
+        slot_date: 1,
+        serviceName: "$serviceDetails.name", // Extract the service name
+        total_price: 1,
+      },
+    },
+  ]);
+};
 
 export default mongoose.models.Booking ||
   mongoose.model("Booking", BookingSchema);

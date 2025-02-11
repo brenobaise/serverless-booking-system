@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
 
       // If the identifier is an email
       if (identifier.includes("@")) {
-        const bookings = await Booking.find({ user_email: identifier });
+        const bookings = await Booking.withServiceDetailsByEmail(identifier );
         if (bookings.length === 0) {
           return NextResponse.json(
             { error: `No bookings found for this email. ${identifier}` },
