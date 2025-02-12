@@ -16,6 +16,7 @@ export default function BookingForm({ service }) {
     setError(null);
 
     try {
+      // console.log(service);
       const total_price = service.price;
       const response = await axios.post("/api/bookings", {
         user_email: email,

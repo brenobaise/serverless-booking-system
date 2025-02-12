@@ -4,7 +4,6 @@ import Booking from "@/app/models/Booking";
 
 export async function GET(req, { params }) {
   const { slug } = await params;
-
   try {
     // Check if the slug contains a single identifier
     if (slug.length === 1) {
@@ -12,20 +11,12 @@ export async function GET(req, { params }) {
 
       // If the identifier is an email
       if (identifier.includes("@")) {
-        const bookings = await Booking.find({ user_email: identifier });
-        if (bookings.length === 0) {
-          return NextResponse.json(
-            { error: `No bookings found for this email. ${identifier}` },
-            { status: 404 }
-          );
-        }
+        const bookings = await Booking.withServiceDetailsByEmail(identifier);
         return NextResponse.json(bookings, { status: 200 });
       }
 
       // If the identifier is a valid ObjectID
       if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
-        console.log("Fetching booking by ID:", identifier);
-
         const booking = await Booking.findById(identifier);
         if (!booking) {
           return NextResponse.json(

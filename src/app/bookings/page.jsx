@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Button from "@/components/bookings/UI/Button";
+import { data } from "autoprefixer";
 
 export default function FetchBookingsByEmail() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,9 @@ export default function FetchBookingsByEmail() {
             `No bookings where found under this email: ${email}`
         );
       }
+
       const data = await response.json();
+      console.log(data);
       setBookings(data);
       setError(null);
     } catch (err) {
@@ -24,7 +27,6 @@ export default function FetchBookingsByEmail() {
       setBookings([]);
     }
   };
-
   return (
     <div className="p-6 h-[600px]">
       <input
@@ -49,8 +51,7 @@ export default function FetchBookingsByEmail() {
           {bookings.map((booking) => (
             <li key={booking._id} className="border p-4 rounded shadow">
               <p>
-                <strong>Service:</strong>{" "}
-                {booking.Service_id?.name || "Unknown"}
+                <strong>Service:</strong> {booking.serviceName || "Unknown"}
               </p>
               <p>
                 <strong>Date:</strong>{" "}
