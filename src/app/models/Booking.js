@@ -16,6 +16,10 @@ const BookingSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    slot_time: {
+      type: String, // Stores "HH:mm" to track booking time
+      required: true,
+    },
     Service_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service",

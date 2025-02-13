@@ -1,3 +1,5 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/prop-types */
 import "../styles/global.css"; // Tailwind global styles
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
@@ -15,9 +17,10 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-row p-6 ">
+    // eslint-disable-next-line react/react-in-jsx-scope
+    <div className='flex flex-row p-6 '>
       <Sidebar />
-      <main className="">{children}</main>
+      <main className=''>{children}</main>
     </div>
   );
 }

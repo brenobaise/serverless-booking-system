@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { validateBookingData } from "@/lib/validators/bookingValidation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import StoreConfig from "@/app/models/StoreConfig";
 
 // GET api/bookings => gets all available bookings
 // Admin Only Route ?
@@ -19,6 +20,8 @@ export async function GET() {
   }
 
   const bookings = await Booking.withServiceDetails();
+  console.log("Existing bookings inside api/bookings:", bookings);
+
   return new Response(JSON.stringify(bookings), { status: 200 });
 }
 
@@ -26,20 +29,52 @@ export async function GET() {
 export async function POST(req) {
   try {
     await connectToDatabase();
-
     const data = await req.json();
-    const validationError = await validateBookingData(data);
-    console.log(`INSIDE api/bookings ${JSON.stringify(data)}`);
+    console.log(`Incomming Booking Request: `, data);
 
-    if (validationError) {
-      return NextResponse.json({ error: validationError }, { status: 400 });
+    const { user_email, slot_date, slot_time, Service_id, total_price } = data;
+
+    if (
+      !user_email ||
+      !slot_date ||
+      !slot_time ||
+      !Service_id ||
+      !total_price
+    ) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    // Create the booking
-    const { user_email, slot_date, Service_id, total_price } = data;
+    const storeConfig = await StoreConfig.findOne();
+    if (!storeConfig) {
+      return NextResponse.json(
+        { error: "Store configuration not found" },
+        { status: 500 }
+      );
+    }
+
+    const maxBookingsPerSlot = storeConfig.max_bookings_per_slot || 1;
+
+    // Check existing bookings for the selected date and time slot
+    const existingBookings = await Booking.countDocuments({
+      slot_date: new Date(slot_date),
+      slot_time,
+    });
+
+    if (existingBookings >= maxBookingsPerSlot) {
+      return NextResponse.json(
+        { error: "Time slot fully booked" },
+        { status: 400 }
+      );
+    }
+
+    // Create the new booking
     const newBooking = await Booking.create({
       user_email,
       slot_date: new Date(slot_date),
+      slot_time,
       Service_id,
       total_price,
     });

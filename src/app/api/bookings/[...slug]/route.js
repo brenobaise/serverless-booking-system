@@ -12,7 +12,7 @@ export async function GET(req, { params }) {
 
       // If the identifier is an email
       if (identifier.includes("@")) {
-        const bookings = await Booking.withServiceDetailsByEmail(identifier );
+        const bookings = await Booking.withServiceDetailsByEmail(identifier);
         if (bookings.length === 0) {
           return NextResponse.json(
             { error: `No bookings found for this email. ${identifier}` },
@@ -37,7 +37,6 @@ export async function GET(req, { params }) {
       }
     }
 
-    // If the slug is invalid
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   } catch (err) {
     console.error("Error fetching booking:", err.message);

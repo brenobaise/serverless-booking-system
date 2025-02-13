@@ -1,38 +1,68 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "./UI/Button";
 
 export default function BookingForm({ service }) {
   const [email, setEmail] = useState("");
   const [slotDate, setSlotDate] = useState("");
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (slotDate) {
+      fetchAvailableSlots(slotDate);
+    }
+  }, [slotDate]);
+
+async function fetchAvailableSlots(date) {
+  try {
+    console.log(`Fetching available slots: /api/bookings/available-slots?date=${date}`); // ✅ Debugging
+
+    const response = await axios.get(`/api/bookings/available-slots?date=${date}`);
+    setAvailableSlots(response.data.availableSlots);
+  } catch (error) {
+    console.error("Error fetching slots:", error.response?.data || error.message);
+    setAvailableSlots([]);
+  }
+}
+
+
 
   const handleBooking = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    // Ensure all required fields are filled
+    if (!email || !slotDate || !selectedTime) {
+      setError("All fields are required.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const total_price = service.price;
       const response = await axios.post("/api/bookings", {
         user_email: email,
         slot_date: slotDate,
+        slot_time: selectedTime,
         Service_id: service._id,
         total_price,
       });
 
-      console.log(` Inside Booking Form ${service.service_id}`);
-      console.log(` Inside Booking Form ${service.name}`);
-      console.log(`Service array ${service}`);
       if (response.status === 201) {
         setSuccess(true);
         setEmail("");
         setSlotDate("");
+        setSelectedTime("");
+        setAvailableSlots([]);
       }
     } catch (err) {
+      console.error("Booking Error:", err.response?.data || err.message);
       setError("Failed to book the service. Please try again.");
     } finally {
       setLoading(false);
@@ -44,7 +74,9 @@ export default function BookingForm({ service }) {
       <h2 className="text-xl font-bold mb-4">Book {service.name}</h2>
       {success && <p className="text-green-600 mb-4">Booking successful!</p>}
       {error && <p className="text-red-600 mb-4">{error}</p>}
+      
       <form onSubmit={handleBooking} className="flex flex-col gap-4">
+        {/* Email Input Field */}
         <div>
           <label htmlFor="email" className="block font-medium">
             Your Email
@@ -58,6 +90,8 @@ export default function BookingForm({ service }) {
             className="w-full border rounded p-2"
           />
         </div>
+
+        {/* Date Input */}
         <div>
           <label htmlFor="slotDate" className="block font-medium">
             Booking Date
@@ -71,13 +105,36 @@ export default function BookingForm({ service }) {
             className="w-full border rounded p-2"
           />
         </div>
-        <Button
-          children={loading ? "Booking..." : "Book Now"}
-          disabled={loading}
-          variant="primary"
-          className="transition ease-linear delay-150 hover:font-medium"
-          type="submit"
-        />
+
+        {/* Available Slots Dropdown */}
+        <div>
+          <label htmlFor="slotTime" className="block font-medium">
+            Select Time Slot
+          </label>
+          <select
+            id="slotTime"
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            required
+            className="w-full border rounded p-2"
+          >
+            <option value="">Select a time</option>
+            {availableSlots.length > 0 ? (
+              availableSlots.map((time) => (
+                <option key={time} value={time}>
+                  {time}
+                </option>
+              ))
+            ) : (
+              <option disabled>No slots available</option>
+            )}
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Booking..." : "Book Now"}
+        </Button>
       </form>
     </div>
   );

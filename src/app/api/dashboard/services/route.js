@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
 
 // Admin GET ./api/dashboard/services
-export async function GET(req) {
+export async function GET() {
   try {
     await connectToDatabase();
     const services = await Service.find();
