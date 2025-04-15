@@ -7,7 +7,16 @@ export default function FetchBookingsByEmail() {
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState(null);
 
+  const isValidEmail = (email) => {
+    return /^\S+@\S+\.\S+$/.test(email);
+  };
+
   const fetchBookings = async () => {
+    if (!email || !isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      setBookings([]);
+      return;
+    }
     try {
       const response = await fetch(`/api/bookings/${email}`);
       if (!response.ok) {
