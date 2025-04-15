@@ -3,9 +3,9 @@ import "@/app/styles/global.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceList from "@/components/services/ServiceList";
-import Button from "@/components/bookings/UI/Button";
+import Button from "@/components/UI/Button";
 import NewServiceForm from "@/components/services/NewServiceForm";
-import Dialog from "@/components/bookings/UI/Dialog"; // Import Dialog component
+import Dialog from "@/components/UI/Dialog"; // Import Dialog component
 
 export default function DashboardServicePage() {
   const [showForm, setShowForm] = useState(false);
@@ -14,6 +14,8 @@ export default function DashboardServicePage() {
   const [error, setError] = useState(null);
 
   // Fetch services
+  // NOTE: Consider refactoring this fetchServices into useEffect
+  // look at app/dashboard/bookings/page.jsx for reference
   const fetchServices = async () => {
     try {
       setLoading(true);
@@ -71,19 +73,19 @@ export default function DashboardServicePage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className='flex flex-col items-center justify-center'>
       <Dialog>
-        <div className="flex p-4 justify-start items-end">
+        <div className='flex p-4 justify-start items-end'>
           <Button
             onClick={toggleShowForm}
-            size="medium"
-            className="bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600"
+            size='medium'
+            className='bg-slate-500 transition ease-in-out delay-350 hover:bg-green-600'
           >
             {showForm ? "Back" : "Add Service"}
           </Button>
         </div>
 
-        <div className="flex justify-center items-center">
+        <div className='flex justify-center items-center'>
           {showForm ? (
             <NewServiceForm onServiceAdded={handleServiceAdded} />
           ) : (

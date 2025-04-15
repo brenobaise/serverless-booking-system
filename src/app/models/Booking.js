@@ -57,6 +57,7 @@ BookingSchema.statics.withServiceDetails = function () {
         user_email: 1,
         booking_date_placed: 1,
         slot_date: 1,
+        slot_time: 1,
         serviceName: "$serviceDetails.name", // Include the service name
         total_price: 1,
       },
@@ -88,6 +89,7 @@ BookingSchema.statics.withServiceDetailsByEmail = function (email) {
         user_email: 1,
         booking_date_placed: 1,
         slot_date: 1,
+        slot_time: 1,
         serviceName: "$serviceDetails.name", // Extract the service name
         total_price: 1,
       },

@@ -21,8 +21,6 @@ function getAvailableBookingSlots(
     return hours * 60 + minutes;
   }
 
-  console.log("📌 start time:", start, "| end time:", end);
-
   const openingTime = timeToMinutes(start);
   const closingTime = timeToMinutes(end);
 
@@ -59,8 +57,6 @@ export async function GET(req) {
   const date = url.searchParams.get("date");
 
   try {
-    console.log("✅ Checking available slots for:", date);
-
     if (!date || !date.match(/^\d{4}-\d{2}-\d{2}$/)) {
       return NextResponse.json(
         { error: "Invalid or missing date format" },
@@ -101,11 +97,9 @@ export async function GET(req) {
       maxBookingsPerSlot
     );
 
-    console.log("✅ Available slots:", availableSlots);
-
     return NextResponse.json({ availableSlots }, { status: 200 });
   } catch (err) {
-    console.error("❌ Error fetching available slots:", err.message);
+    console.error(" Error fetching available slots:", err.message);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

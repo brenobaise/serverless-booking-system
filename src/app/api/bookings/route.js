@@ -10,7 +10,6 @@ export async function GET() {
   await connectToDatabase();
 
   const bookings = await Booking.withServiceDetails();
-  console.log("Existing bookings inside api/bookings:", bookings);
 
   return new Response(JSON.stringify(bookings), { status: 200 });
 }

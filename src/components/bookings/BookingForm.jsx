@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Button from "./UI/Button";
+import Button from "../UI/Button";
 
 export default function BookingForm({ service }) {
   const [email, setEmail] = useState("");
@@ -18,19 +18,20 @@ export default function BookingForm({ service }) {
     }
   }, [slotDate]);
 
-async function fetchAvailableSlots(date) {
-  try {
-    console.log(`Fetching available slots: /api/bookings/available-slots?date=${date}`); // ✅ Debugging
-
-    const response = await axios.get(`/api/bookings/available-slots?date=${date}`);
-    setAvailableSlots(response.data.availableSlots);
-  } catch (error) {
-    console.error("Error fetching slots:", error.response?.data || error.message);
-    setAvailableSlots([]);
+  async function fetchAvailableSlots(date) {
+    try {
+      const response = await axios.get(
+        `/api/bookings/available-slots?date=${date}`
+      );
+      setAvailableSlots(response.data.availableSlots);
+    } catch (error) {
+      console.error(
+        "Error fetching slots:",
+        error.response?.data || error.message
+      );
+      setAvailableSlots([]);
+    }
   }
-}
-
-
 
   const handleBooking = async (e) => {
     e.preventDefault();
@@ -70,55 +71,55 @@ async function fetchAvailableSlots(date) {
   };
 
   return (
-    <div className="border p-4 rounded shadow-md max-w-md bg-white w-full sm:w-96">
-      <h2 className="text-xl font-bold mb-4">Book {service.name}</h2>
-      {success && <p className="text-green-600 mb-4">Booking successful!</p>}
-      {error && <p className="text-red-600 mb-4">{error}</p>}
-      
-      <form onSubmit={handleBooking} className="flex flex-col gap-4">
+    <div className='border p-4 rounded shadow-md max-w-md bg-white w-full sm:w-96'>
+      <h2 className='text-xl font-bold mb-4'>Book {service.name}</h2>
+      {success && <p className='text-green-600 mb-4'>Booking successful!</p>}
+      {error && <p className='text-red-600 mb-4'>{error}</p>}
+
+      <form onSubmit={handleBooking} className='flex flex-col gap-4'>
         {/* Email Input Field */}
         <div>
-          <label htmlFor="email" className="block font-medium">
+          <label htmlFor='email' className='block font-medium'>
             Your Email
           </label>
           <input
-            type="email"
-            id="email"
+            type='email'
+            id='email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full border rounded p-2"
+            className='w-full border rounded p-2'
           />
         </div>
 
         {/* Date Input */}
         <div>
-          <label htmlFor="slotDate" className="block font-medium">
+          <label htmlFor='slotDate' className='block font-medium'>
             Booking Date
           </label>
           <input
-            type="date"
-            id="slotDate"
+            type='date'
+            id='slotDate'
             value={slotDate}
             onChange={(e) => setSlotDate(e.target.value)}
             required
-            className="w-full border rounded p-2"
+            className='w-full border rounded p-2'
           />
         </div>
 
         {/* Available Slots Dropdown */}
         <div>
-          <label htmlFor="slotTime" className="block font-medium">
+          <label htmlFor='slotTime' className='block font-medium'>
             Select Time Slot
           </label>
           <select
-            id="slotTime"
+            id='slotTime'
             value={selectedTime}
             onChange={(e) => setSelectedTime(e.target.value)}
             required
-            className="w-full border rounded p-2"
+            className='w-full border rounded p-2'
           >
-            <option value="">Select a time</option>
+            <option value=''>Select a time</option>
             {availableSlots.length > 0 ? (
               availableSlots.map((time) => (
                 <option key={time} value={time}>
@@ -132,7 +133,7 @@ async function fetchAvailableSlots(date) {
         </div>
 
         {/* Submit Button */}
-        <Button type="submit" disabled={loading}>
+        <Button type='submit' disabled={loading}>
           {loading ? "Booking..." : "Book Now"}
         </Button>
       </form>

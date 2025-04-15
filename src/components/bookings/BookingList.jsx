@@ -1,13 +1,18 @@
-import BookingCard from "./BookingCard";
-export default function BookingList({ bookings }) {
+import AdminBookingCard from "./AdminBookingCard";
+export default function BookingList({ bookings, onEdit, onDelete }) {
   if (!Array.isArray(bookings) || bookings.length === 0) {
-    return <p className="text-center text-gray-500">No bookings available.</p>;
+    return <p className='text-center text-gray-500'>No bookings available.</p>;
   }
 
   return (
-    <ul className="flex flex-col justify-center w-2/3">
+    <ul className='grid grid-cols-1 md:grid-cols-2 gap-6 p-6'>
       {bookings.map((booking) => (
-        <BookingCard key={booking._id} bookings={booking} />
+        <AdminBookingCard
+          key={booking._id}
+          booking={booking}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </ul>
   );
