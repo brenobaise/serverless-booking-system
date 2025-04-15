@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../UI/Button";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 export default function BookingForm({ service }) {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function BookingForm({ service }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     if (slotDate) {
@@ -33,7 +35,19 @@ export default function BookingForm({ service }) {
     }
   }
 
-  const handleBooking = async (e) => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (!email || !slotDate || !selectedTime) {
+      setError("All fields are required.");
+      return;
+    }
+
+    setShowConfirmDialog(true); // show the dialog now
+  };
+
+  const confirmBooking = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -62,6 +76,9 @@ export default function BookingForm({ service }) {
         setSelectedTime("");
         setAvailableSlots([]);
       }
+
+      // close the dialog
+      setShowConfirmDialog(false);
     } catch (err) {
       console.error("Booking Error:", err.response?.data || err.message);
       setError("Failed to book the service. Please try again.");
@@ -76,7 +93,7 @@ export default function BookingForm({ service }) {
       {success && <p className='text-green-600 mb-4'>Booking successful!</p>}
       {error && <p className='text-red-600 mb-4'>{error}</p>}
 
-      <form onSubmit={handleBooking} className='flex flex-col gap-4'>
+      <form onSubmit={handleFormSubmit} className='flex flex-col gap-4'>
         {/* Email Input Field */}
         <div>
           <label htmlFor='email' className='block font-medium'>
@@ -137,6 +154,19 @@ export default function BookingForm({ service }) {
           {loading ? "Booking..." : "Book Now"}
         </Button>
       </form>
+      <ConfirmationDialog
+        open={showConfirmDialog}
+        onCancel={() => setShowConfirmDialog(false)}
+        onConfirm={confirmBooking}
+        loading={loading}
+        data={{
+          serviceName: service.name,
+          price: service.price,
+          email,
+          date: slotDate,
+          time: selectedTime,
+        }}
+      />
     </div>
   );
 }
