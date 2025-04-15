@@ -1,6 +1,6 @@
+/* eslint-disable no-undef */
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 // admin/dashboard
 export const authOptions = {
   providers: [

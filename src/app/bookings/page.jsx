@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Button from "@/components/bookings/UI/Button";
+import Button from "@/components/UI/Button";
 
 export default function FetchBookingsByEmail() {
   const [email, setEmail] = useState("");
@@ -16,48 +16,56 @@ export default function FetchBookingsByEmail() {
             `No bookings where found under this email: ${email}`
         );
       }
+
       const data = await response.json();
+      console.log(data);
+
       setBookings(data);
       setError(null);
     } catch (err) {
       setError(err.message);
       setBookings([]);
     }
-  };
 
+    console.log(bookings);
+  };
   return (
-    <div className="p-6 h-[600px]">
+    <div className='p-6 h-[600px]'>
       <input
-        type="email"
+        type='email'
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        className="border p-2 rounded mr-4"
+        placeholder='Enter your email'
+        className='border p-2 rounded mr-4'
       />
       <Button
-        children="Fetch Bookings"
+        children='Fetch Bookings'
         onClick={fetchBookings}
-        size="medium"
-        variant="primary"
-        className="transition ease-linear delay-150 hover:font-medium"
+        size='medium'
+        variant='primary'
+        className='transition ease-linear delay-150 hover:font-medium'
       />
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {error && <p className='text-red-500 mt-4'>{error}</p>}
 
       {bookings.length > 0 && (
-        <ul className="mt-6 space-y-4">
+        <ul className='mt-6 space-y-4'>
           {bookings.map((booking) => (
-            <li key={booking._id} className="border p-4 rounded shadow">
-              <p>
-                <strong>Service:</strong>{" "}
-                {booking.serviceName || "Unknown"}
+            <li key={booking._id} className='border p-4 rounded shadow'>
+              <p className='text-md font-bold '>
+                Booked Service: {booking.serviceName}
               </p>
               <p>
-                <strong>Date:</strong>{" "}
-                {new Date(booking.slot_date).toLocaleDateString()}
+                <strong>Date:</strong> {booking.slot_time} -{" "}
+                {new Date(booking.slot_date).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
               </p>
-              <p>
-                <strong>Total Price:</strong> ${booking.total_price}
+
+              <p className='text-md font-bold '>
+                Total Price: ${booking.total_price}
               </p>
             </li>
           ))}

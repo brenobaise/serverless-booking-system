@@ -6,7 +6,7 @@ function SideBar() {
       <div className="flex flex-col justify-start  grow-0 bg-blue-700  w-[250px] rounded-tl-xl rounded-bl-xl border-3">
         <SidebarItem
           iconPath={"/overview.svg"}
-          url={"/dashboard"}
+          url={"/dashboard/storeconfigs"}
           itemName={"Overview"}
           size={"large"}
         />

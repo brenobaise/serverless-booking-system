@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 function Footer() {
   return (
     <div className="flex flex-row h-[300px] justify-center items-center bg-slate-800">

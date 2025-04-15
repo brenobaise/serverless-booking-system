@@ -1,8 +1,6 @@
 import connectToDatabase from "@/lib/mongoose";
 import Service from "@/app/models/Service";
 import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // Admin GET api/dashboard/services/:id
 export async function GET(req, { params }) {
@@ -55,14 +53,6 @@ export async function PUT(req, { params }) {
 
   try {
     await connectToDatabase();
-    const session = await getServerSession(authOptions);
-
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Unauthorized: Admin access only" },
-        { status: 401 }
-      );
-    }
 
     const updatedService = await Service.findByIdAndUpdate(
       id,
@@ -95,14 +85,6 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     await connectToDatabase();
-    const session = await getServerSession(authOptions);
-
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json(
-        { error: "Unauthorized: Admin access only" },
-        { status: 401 }
-      );
-    }
 
     const { id } = await params;
 
