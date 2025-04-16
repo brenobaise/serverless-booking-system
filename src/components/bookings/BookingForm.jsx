@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../UI/Button";
 import ConfirmationDialog from "./ConfirmationDialog";
+import DatePicker from "react-datepicker";
+import { isSameDay } from "date-fns";
 
 export default function BookingForm({ service, unique_code }) {
   const [email, setEmail] = useState("");
-  const [slotDate, setSlotDate] = useState("");
+  const [slotDate, setSlotDate] = useState(new Date());
+  const [unavailableDates, setUnavailableDates] = useState([]);
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,10 +18,42 @@ export default function BookingForm({ service, unique_code }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    if (slotDate) {
-      fetchAvailableSlots(slotDate);
+    async function fetchDisabledDates() {
+      const res = await axios.get("api/dashboard/storeconfig");
+
+      const { open_times, max_booking_per_slot } = res.data.data;
+
+      const daysToCheck = 30;
+      const datesToDisable = [];
+
+      for (let i = 0; i < daysToCheck; i++) {
+        const date = new Date();
+        date.setDate(date.getDate() + i);
+
+        const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
+
+        const config = open_times[dayName];
+        if (!config || config.isClosed) {
+          datesToDisable.push(new Date(date));
+          continue;
+        }
+
+        const dateString = date.toISOString().split("T")[0];
+        const res = await axios.get(
+          `/api/bookings/available-slots?date=${dateString}`
+        );
+        const data = res.data;
+
+        if (data.availableSlots.length === 0) {
+          datesToDisable.push(new Date(date));
+        }
+      }
+
+      setUnavailableDates(datesToDisable);
     }
-  }, [slotDate]);
+
+    fetchDisabledDates();
+  }, []);
 
   async function fetchAvailableSlots(date) {
     try {
@@ -34,6 +69,12 @@ export default function BookingForm({ service, unique_code }) {
       setAvailableSlots([]);
     }
   }
+  useEffect(() => {
+    if (slotDate) {
+      const formatted = slotDate.toISOString().split("T")[0];
+      fetchAvailableSlots(formatted);
+    }
+  }, [slotDate]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -53,7 +94,7 @@ export default function BookingForm({ service, unique_code }) {
     setError(null);
 
     // Ensure all required fields are filled
-    if (!email || !slotDate || !selectedTime) {
+    if (!email || !selectedTime) {
       setError("All fields are required.");
       setLoading(false);
       return;
@@ -63,7 +104,7 @@ export default function BookingForm({ service, unique_code }) {
       const total_price = service.price;
       const response = await axios.post("/api/bookings", {
         user_email: email,
-        slot_date: slotDate,
+        slot_date: slotDate.toISOString().split("T")[0],
         slot_time: selectedTime,
         Service_id: service._id,
         total_price,
@@ -73,7 +114,8 @@ export default function BookingForm({ service, unique_code }) {
       if (response.status === 201) {
         setSuccess(true);
         setEmail("");
-        setSlotDate("");
+        setSlotDate(new Date());
+
         setSelectedTime("");
         setAvailableSlots([]);
       }
@@ -115,12 +157,15 @@ export default function BookingForm({ service, unique_code }) {
           <label htmlFor='slotDate' className='block font-medium'>
             Booking Date
           </label>
-          <input
-            type='date'
-            id='slotDate'
-            value={slotDate}
-            onChange={(e) => setSlotDate(e.target.value)}
-            required
+          <DatePicker
+            selected={slotDate}
+            onChange={(date) => setSlotDate(date)}
+            minDate={new Date()}
+            filterDate={(date) => {
+              return !unavailableDates.some((d) => isSameDay(d, date));
+            }}
+            placeholderText='Select a booking date'
+            dateFormat='yyyy-MM-dd'
             className='w-full border rounded p-2'
           />
         </div>
@@ -139,11 +184,13 @@ export default function BookingForm({ service, unique_code }) {
           >
             <option value=''>Select a time</option>
             {availableSlots.length > 0 ? (
-              availableSlots.map((time) => (
-                <option key={time} value={time}>
-                  {time}
-                </option>
-              ))
+              availableSlots
+                .filter((slot) => slot.available) // Only show available ones
+                .map(({ time }) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))
             ) : (
               <option disabled>No slots available</option>
             )}
@@ -164,7 +211,11 @@ export default function BookingForm({ service, unique_code }) {
           serviceName: service.name,
           price: service.price,
           email,
-          date: slotDate,
+          date: slotDate.toLocaleDateString("en-GB", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
           time: selectedTime,
         }}
         unique_code={unique_code}

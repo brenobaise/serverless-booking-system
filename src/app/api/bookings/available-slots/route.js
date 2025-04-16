@@ -45,7 +45,12 @@ function getAvailableBookingSlots(
     return `${hours}:${mins}`;
   }
 
-  return availableSlots.map(minutesToTime);
+  return allSlots.map((minutes) => {
+    const time = minutesToTime(minutes);
+    const isAvailable = !bookedCounts[minutes] || bookedCounts[minutes] < maxBookingsPerSlot;
+    return { time, available: isAvailable };
+  });
+
 }
 
 // API Handler
