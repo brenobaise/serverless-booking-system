@@ -64,6 +64,7 @@ BookingSchema.statics.withServiceDetails = function () {
         slot_time: 1,
         serviceName: "$serviceDetails.name", // Include the service name
         total_price: 1,
+        unique_code: 1,
       },
     },
   ]);
@@ -96,6 +97,7 @@ BookingSchema.statics.withServiceDetailsByEmail = function (email) {
         slot_time: 1,
         serviceName: "$serviceDetails.name", // Extract the service name
         total_price: 1,
+        unique_code: 1,
       },
     },
   ]);

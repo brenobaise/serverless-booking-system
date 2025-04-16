@@ -1,5 +1,8 @@
 import Button from "../UI/Button";
 
+/**
+ * The Booking Card Component
+ */
 function BookingCard({ bookings, oneEdit }) {
   return (
     <div

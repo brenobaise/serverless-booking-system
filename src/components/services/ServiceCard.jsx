@@ -3,6 +3,11 @@ import BookingForm from "../bookings/BookingForm.jsx";
 import Button from "../UI/Button.jsx";
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * User Service Card.
+ * It is the card displayed to the user when booking a service.
+ * It also calls the BookingForm Component
+ */
 export default function ServiceCard({ service }) {
   const [showForm, setShowForm] = useState(false);
   const confirmation_code = uuidv4();

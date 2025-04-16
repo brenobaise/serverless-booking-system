@@ -1,4 +1,11 @@
 "use client";
+
+/**
+ * Confirmation Dialog Component.
+ * Renders when the user clicks "Book Now" from the BookingForm.
+ * It shows booking info and the unique code required to cancel the booking.
+ */
+
 export default function ConfirmationDialog({
   open,
   onConfirm,
@@ -10,40 +17,60 @@ export default function ConfirmationDialog({
   if (!open) return null;
 
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
-      <div className='bg-white p-6 rounded-lg shadow-lg max-w-sm w-full'>
-        <h3 className='text-lg font-semibold mb-4'>Confirm Your Booking</h3>
-        <ul className='mb-4 text-sm space-y-1'>
-          <li>
-            <strong>Service:</strong> {data.serviceName}
-          </li>
-          <li>
-            <strong>Price:</strong> £{data.price}
-          </li>
-          <li>
-            <strong>Email:</strong> {data.email}
-          </li>
-          <li>
-            <strong>Date:</strong> {data.date}
-          </li>
-          <li>
-            <strong>Time:</strong> {data.time}
-          </li>
-          <li>
-            <strong>Your confirmation code:</strong> <br></br> {unique_code}
-          </li>
-        </ul>
-        <div className='flex justify-end gap-3'>
+    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4'>
+      <div className='bg-white p-6 rounded-2xl shadow-xl max-w-md w-full space-y-6'>
+        {/* Title */}
+        <h2 className='text-xl font-bold text-gray-800 text-center'>
+          Confirm Your Booking
+        </h2>
+
+        {/* Booking Summary */}
+        <div className='text-sm text-gray-700 space-y-2'>
+          <div className='flex justify-between'>
+            <span className='font-medium'>Service:</span>
+            <span>{data.serviceName}</span>
+          </div>
+          <div className='flex justify-between'>
+            <span className='font-medium'>Price:</span>
+            <span>£{data.price}</span>
+          </div>
+          <div className='flex justify-between'>
+            <span className='font-medium'>Email:</span>
+            <span>{data.email}</span>
+          </div>
+          <div className='flex justify-between'>
+            <span className='font-medium'>Date:</span>
+            <span>{data.date}</span>
+          </div>
+          <div className='flex justify-between'>
+            <span className='font-medium'>Time:</span>
+            <span>{data.time}</span>
+          </div>
+        </div>
+
+        {/* Confirmation Code */}
+        <div className='bg-gray-100 rounded-lg p-4 text-sm text-gray-800'>
+          <p className='font-semibold mb-1'>Your Confirmation Code:</p>
+          <div className='bg-white p-2 rounded border font-mono text-sm text-blue-600'>
+            {unique_code}
+          </div>
+          <p className='mt-2 text-xs text-gray-500'>
+            Please save this code. It will be required to cancel your booking.
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className='flex justify-end gap-3 pt-2'>
           <button
             onClick={onCancel}
-            className='bg-gray-200 text-gray-800 px-4 py-2 rounded'
+            className='px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-100 transition'
           >
             Edit Choices
           </button>
           <button
             onClick={onConfirm}
             disabled={loading}
-            className='bg-blue-600 text-white px-4 py-2 rounded'
+            className='px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition disabled:opacity-50'
           >
             {loading ? "Booking..." : "Confirm Booking"}
           </button>
