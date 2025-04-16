@@ -85,7 +85,7 @@ export default function FetchBookingsByEmail() {
   };
 
   return (
-    <div className='p-6 min-h-screen max-w-3xl mx-auto'>
+    <div className='p-6 max-w-3xl w-full mx-auto mt-10'>
       {/* Email Input and Fetch Button */}
       <div className='flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6'>
         <input
@@ -109,7 +109,7 @@ export default function FetchBookingsByEmail() {
 
       {/* No Bookings Found */}
       {bookings.length === 0 && !error && email && (
-        <p className='text-gray-500 text-sm mt-4'>
+        <p className='text-gray-500 text-sm mt-10 text-center'>
           No bookings found for this email.
         </p>
       )}
@@ -117,51 +117,56 @@ export default function FetchBookingsByEmail() {
       {/* Booking List */}
       {bookings.length > 0 && (
         <>
-          <ul className='space-y-4'>
-            {bookings.map((booking) => (
-              <li
-                key={booking._id}
-                className='border border-gray-200 p-5 rounded-xl shadow-sm hover:shadow-md bg-white transition'
-              >
-                {/* Service Name */}
-                <h3 className='text-lg font-semibold text-gray-900 mb-2'>
-                  {booking.serviceName}
-                </h3>
+          <div className='overflow-y-auto max-h-[600px] pr-2'>
+            <ul className='space-y-4'>
+              {bookings.map((booking) => (
+                <li
+                  key={booking._id}
+                  className='border border-gray-200 p-5 rounded-xl shadow-sm hover:shadow-md bg-white transition'
+                >
+                  {/* Service Name */}
+                  <h3 className='text-lg font-semibold text-gray-900 mb-2'>
+                    {booking.serviceName}
+                  </h3>
 
-                {/* Date and Time Info */}
-                <div className='text-sm text-gray-700 mb-3'>
-                  <div className='flex flex-wrap gap-4'>
-                    <div>
-                      <span className='font-medium'>Time:</span>{" "}
-                      {booking.slot_time}
-                    </div>
-                    <div>
-                      <span className='font-medium'>Date:</span>{" "}
-                      {new Date(booking.slot_date).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
+                  {/* Date and Time Info */}
+                  <div className='text-sm text-gray-700 mb-3'>
+                    <div className='flex flex-wrap gap-4'>
+                      <div>
+                        <span className='font-medium'>Time:</span>{" "}
+                        {booking.slot_time}
+                      </div>
+                      <div>
+                        <span className='font-medium'>Date:</span>{" "}
+                        {new Date(booking.slot_date).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Price */}
-                <p className='text-md font-semibold text-gray-800 mb-3'>
-                  Total Price: £{booking.total_price}
-                </p>
+                  {/* Price */}
+                  <p className='text-md font-semibold text-gray-800 mb-3'>
+                    Total Price: £{booking.total_price}
+                  </p>
 
-                {/* Cancel Button */}
-                <div>
-                  <Button
-                    children='Cancel Booking'
-                    onClick={() => handleCancelClick(booking)}
-                    className='px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition'
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+                  {/* Cancel Button */}
+                  <div>
+                    <Button
+                      children='Cancel Booking'
+                      onClick={() => handleCancelClick(booking)}
+                      className='px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm transition'
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Cancel Dialog */}
           <CancelDialog
