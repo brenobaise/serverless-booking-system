@@ -30,6 +30,10 @@ const BookingSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    unique_code: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );
@@ -60,6 +64,7 @@ BookingSchema.statics.withServiceDetails = function () {
         slot_time: 1,
         serviceName: "$serviceDetails.name", // Include the service name
         total_price: 1,
+        unique_code: 1,
       },
     },
   ]);
@@ -92,6 +97,7 @@ BookingSchema.statics.withServiceDetailsByEmail = function (email) {
         slot_time: 1,
         serviceName: "$serviceDetails.name", // Extract the service name
         total_price: 1,
+        unique_code: 1,
       },
     },
   ]);

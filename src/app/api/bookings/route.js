@@ -19,9 +19,8 @@ export async function POST(req) {
   try {
     await connectToDatabase();
     const data = await req.json();
-    console.log(`Incomming Booking Request: `, data);
 
-    const { user_email, slot_date, slot_time, Service_id, total_price } = data;
+    const { user_email, slot_date, slot_time, Service_id, total_price, unique_code } = data;
 
     if (
       !user_email ||
@@ -66,6 +65,7 @@ export async function POST(req) {
       slot_time,
       Service_id,
       total_price,
+      unique_code
     });
 
     return NextResponse.json(newBooking, { status: 201 });
