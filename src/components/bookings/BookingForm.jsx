@@ -17,41 +17,45 @@ export default function BookingForm({ service, unique_code }) {
   const [success, setSuccess] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  useEffect(() => {
-    async function fetchDisabledDates() {
-      const res = await axios.get("api/dashboard/storeconfig");
+  async function fetchDisabledDates() {
+    const res = await axios.get("api/dashboard/storeconfig");
+    const { open_times, max_booking_per_slot } = res.data.data;
 
-      const { open_times, max_booking_per_slot } = res.data.data;
+    const daysToCheck = 30;
+    const datesToDisable = [];
 
-      const daysToCheck = 30;
-      const datesToDisable = [];
+    for (let i = 0; i < daysToCheck; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
 
-      for (let i = 0; i < daysToCheck; i++) {
-        const date = new Date();
-        date.setDate(date.getDate() + i);
+      const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
+      const config = open_times[dayName];
 
-        const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
-
-        const config = open_times[dayName];
-        if (!config || config.isClosed) {
-          datesToDisable.push(new Date(date));
-          continue;
-        }
-
-        const dateString = date.toISOString().split("T")[0];
-        const res = await axios.get(
-          `/api/bookings/available-slots?date=${dateString}`
-        );
-        const data = res.data;
-
-        if (data.availableSlots.length === 0) {
-          datesToDisable.push(new Date(date));
-        }
+      if (!config || config.isClosed) {
+        datesToDisable.push(new Date(date));
+        continue;
       }
 
-      setUnavailableDates(datesToDisable);
+      const dateString = date.toISOString().split("T")[0];
+      const res = await axios.get(
+        `/api/bookings/available-slots?date=${dateString}`
+      );
+      const data = res.data;
+
+      // 🔥 THIS IS THE IMPORTANT FIX:
+      const hasAvailableSlots = data.availableSlots.some(
+        (slot) => slot.available
+      );
+
+      if (!hasAvailableSlots) {
+        datesToDisable.push(new Date(date));
+      }
     }
 
+    setUnavailableDates(datesToDisable);
+  }
+
+  useEffect(() => {
     fetchDisabledDates();
   }, []);
 
@@ -112,12 +116,15 @@ export default function BookingForm({ service, unique_code }) {
       });
 
       if (response.status === 201) {
+        // if the booking is created then:
+        // reset everything and set the view as it was before
         setSuccess(true);
         setEmail("");
         setSlotDate(new Date());
 
         setSelectedTime("");
         setAvailableSlots([]);
+        await fetchDisabledDates();
       }
 
       // close the dialog

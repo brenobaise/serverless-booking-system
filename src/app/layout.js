@@ -12,15 +12,16 @@ import "./styles/global.css";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="flex flex-col min-h-screen">
         <SessionProvider>
           <Header />
-          <div className="flex flex-row justify-center items-center ">
-            <main className="">{children}</main>
-          </div>
+          <main className="flex-grow flex justify-center items-start">
+            {children}
+          </main>
+          <Footer />
         </SessionProvider>
-        <Footer />
       </body>
+
     </html>
   );
 }
