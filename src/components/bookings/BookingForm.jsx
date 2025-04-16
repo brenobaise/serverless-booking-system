@@ -4,7 +4,7 @@ import axios from "axios";
 import Button from "../UI/Button";
 import ConfirmationDialog from "./ConfirmationDialog";
 
-export default function BookingForm({ service }) {
+export default function BookingForm({ service, unique_code }) {
   const [email, setEmail] = useState("");
   const [slotDate, setSlotDate] = useState("");
   const [availableSlots, setAvailableSlots] = useState([]);
@@ -67,6 +67,7 @@ export default function BookingForm({ service }) {
         slot_time: selectedTime,
         Service_id: service._id,
         total_price,
+        unique_code: unique_code,
       });
 
       if (response.status === 201) {
@@ -166,6 +167,7 @@ export default function BookingForm({ service }) {
           date: slotDate,
           time: selectedTime,
         }}
+        unique_code={unique_code}
       />
     </div>
   );

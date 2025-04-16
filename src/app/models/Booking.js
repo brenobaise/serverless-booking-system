@@ -30,6 +30,10 @@ const BookingSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    unique_code: {
+      type: String,
+      required: true,
+    }
   },
   { timestamps: true }
 );

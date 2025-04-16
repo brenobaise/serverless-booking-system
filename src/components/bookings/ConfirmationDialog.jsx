@@ -5,6 +5,7 @@ export default function ConfirmationDialog({
   onCancel,
   data,
   loading,
+  unique_code,
 }) {
   if (!open) return null;
 
@@ -27,6 +28,9 @@ export default function ConfirmationDialog({
           </li>
           <li>
             <strong>Time:</strong> {data.time}
+          </li>
+          <li>
+            <strong>Your confirmation code:</strong> <br></br> {unique_code}
           </li>
         </ul>
         <div className='flex justify-end gap-3'>
