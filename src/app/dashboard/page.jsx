@@ -4,7 +4,7 @@ import Dialog from "@/components/UI/Dialog";
 
 export default function DashboardPage() {
   return (
-    <div>
+    <div className=''>
       <Dialog></Dialog>
     </div>
   );
