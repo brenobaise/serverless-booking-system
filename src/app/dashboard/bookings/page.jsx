@@ -103,7 +103,7 @@ export default function DashboardBookingPage() {
         <div className='flex flex-col justify-center items-center'>
           {/* Sort Dropdown */}
           <div className='my-4'>
-            <label className='mr-2'>Sort by:</label>
+            <label className='mr-2 text-white font-bold'>Sort by:</label>
             <select
               className='border px-2 py-1 rounded'
               value={sortOrder}
