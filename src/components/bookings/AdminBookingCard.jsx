@@ -2,38 +2,72 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Button from "../UI/Button";
+import DatePicker from "react-datepicker";
+import { isSameDay } from "date-fns";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AdminBookingCard({ booking, onEdit, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedBooking, setEditedBooking] = useState({ ...booking });
+  // track slotDate as a Date object
+  const [slotDate, setSlotDate] = useState(
+    booking.slot_date ? new Date(booking.slot_date) : new Date()
+  );
   const [availableSlots, setAvailableSlots] = useState([]);
+  const [unavailableDates, setUnavailableDates] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedBooking((prev) => ({ ...prev, [name]: value }));
-  };
+  // Fetch disabled dates when entering edit mode
+  useEffect(() => {
+    if (isEditing) {
+      fetchDisabledDates();
+      fetchSlotsForDate(slotDate);
+    }
+  }, [isEditing]);
 
-  const fetchAvailableSlots = async (date) => {
+  // Whenever slotDate changes, push it into editedBooking and reload slots
+  useEffect(() => {
+    if (isEditing) {
+      setEditedBooking((prev) => ({
+        ...prev,
+        slot_date: slotDate.toISOString(),
+      }));
+      fetchSlotsForDate(slotDate);
+    }
+  }, [slotDate]);
+
+  async function fetchDisabledDates() {
+    const today = new Date().toISOString().slice(0, 10);
+    const daysToCheck = 30;
+
     try {
-      setLoadingSlots(true);
-      const response = await axios.get(
-        `/api/bookings/available-slots?date=${date}`
+      const res = await axios.get(
+        `/api/bookings/disabled-dates?start=${today}&days=${daysToCheck}`
       );
-      setAvailableSlots(response.data.availableSlots || []);
+      // convert each "YYYY‑MM‑DD" back into a Date object
+      const disabled = res.data.disabledDates.map((d) => new Date(d));
+      setUnavailableDates(disabled);
     } catch (err) {
+      console.error("Failed to load disabled dates:", err);
+      setUnavailableDates([]);
+    }
+  }
+
+  async function fetchSlotsForDate(dateObj) {
+    setLoadingSlots(true);
+    try {
+      const dateStr = dateObj.toISOString().split("T")[0];
+      const res = await axios.get(
+        `/api/bookings/available-slots?date=${dateStr}`
+      );
+      setAvailableSlots(res.data.availableSlots);
+    } catch (err) {
+      console.error("Error fetching slots:", err);
       setAvailableSlots([]);
     } finally {
       setLoadingSlots(false);
     }
-  };
-
-  // Fetch available slots when slot_date changes
-  useEffect(() => {
-    if (isEditing && editedBooking.slot_date) {
-      fetchAvailableSlots(editedBooking.slot_date.split("T")[0]);
-    }
-  }, [editedBooking.slot_date, isEditing]);
+  }
 
   const handleSave = () => {
     onEdit(editedBooking);
@@ -41,8 +75,7 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
   };
 
   const handleDeleteClick = () => {
-    const confirmed = confirm("Are you sure you want to delete this booking?");
-    if (confirmed) {
+    if (confirm("Are you sure you want to delete this booking?")) {
       onDelete(booking._id);
     }
   };
@@ -51,7 +84,7 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
     <div className='border p-4 rounded-lg shadow-md w-full max-w-2xl mx-auto bg-white'>
       {isEditing ? (
         <div className='space-y-4'>
-          {/* Email Display */}
+          {/* Email */}
           <div>
             <label className='block text-md p-2 font-semibold text-center'>
               User Email
@@ -61,21 +94,25 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
             </p>
           </div>
 
-          {/* Slot Date Input */}
+          {/* DatePicker */}
           <div>
             <label className='block text-md font-semibold p-2 text-center'>
               Slot Date
             </label>
-            <input
-              type='date'
-              name='slot_date'
-              value={editedBooking.slot_date?.split("T")[0] || ""}
-              onChange={handleInputChange}
+            <DatePicker
+              selected={slotDate}
+              onChange={(date) => setSlotDate(date)}
+              minDate={new Date()}
+              filterDate={(date) =>
+                !unavailableDates.some((d) => isSameDay(d, date))
+              }
+              placeholderText='Select a booking date'
+              dateFormat='yyyy-MM-dd'
               className='w-full border p-2 rounded text-center'
             />
           </div>
 
-          {/* Slot Time Dropdown */}
+          {/* Time slots */}
           <div>
             <label className='block text-md font-semibold p-2 text-center'>
               Slot Time
@@ -83,28 +120,37 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
             <select
               name='slot_time'
               value={editedBooking.slot_time || ""}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedBooking((prev) => ({
+                  ...prev,
+                  slot_time: e.target.value,
+                }))
+              }
               className='w-full border p-2 rounded text-center'
             >
               <option value=''>Select a time</option>
               {loadingSlots ? (
                 <option disabled>Loading slots...</option>
               ) : availableSlots.length > 0 ? (
-                availableSlots.map((time) => (
-                  <option key={time} value={time}>
-                    {time}
-                  </option>
-                ))
+                availableSlots
+                  .filter((slot) => slot.available)
+                  .map((slot) => (
+                    <option key={slot.time} value={slot.time}>
+                      {slot.time}
+                    </option>
+                  ))
               ) : (
                 <option disabled>No slots available</option>
               )}
             </select>
           </div>
 
-          {/* Action Buttons */}
+          {/* Actions */}
           <div className='flex gap-4 justify-end'>
-            <Button children='Save' onClick={handleSave} variant='success' />
-            <Button children='Cancel' onClick={() => setIsEditing(false)} />
+            <Button onClick={handleSave} variant='success'>
+              Save
+            </Button>
+            <Button onClick={() => setIsEditing(false)}>Cancel</Button>
           </div>
         </div>
       ) : (
@@ -112,7 +158,6 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
           <h3 className='text-md font-semibold text-center '>
             Service - {booking.serviceName}
           </h3>
-
           <div className='flex flex-col p-4 justify-evenly'>
             <p className='text-sm font-semibold text-gray-500 text-center p-2'>
               {booking.user_email}
@@ -121,18 +166,16 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
               {booking.slot_date?.split("T")[0]} {booking.slot_time}
             </p>
             <p className='text-sm text-center'>Price: £{booking.total_price}</p>
-
             <div className='flex justify-between mt-4'>
               <Button
-                children='Edit'
                 onClick={() => setIsEditing(true)}
                 className='bg-blue-500'
-              />
-              <Button
-                children='Delete'
-                onClick={handleDeleteClick}
-                variant='danger'
-              />
+              >
+                Edit
+              </Button>
+              <Button onClick={handleDeleteClick} variant='danger'>
+                Delete
+              </Button>
             </div>
           </div>
         </>

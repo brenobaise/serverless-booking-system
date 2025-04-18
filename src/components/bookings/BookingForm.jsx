@@ -18,41 +18,19 @@ export default function BookingForm({ service, unique_code }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   async function fetchDisabledDates() {
-    const res = await axios.get("api/dashboard/storeconfig");
-    const { open_times, max_booking_per_slot } = res.data.data;
-
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
     const daysToCheck = 30;
-    const datesToDisable = [];
 
-    for (let i = 0; i < daysToCheck; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-
-      const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
-      const config = open_times[dayName];
-
-      if (!config || config.isClosed) {
-        datesToDisable.push(new Date(date));
-        continue;
-      }
-
-      const dateString = date.toISOString().split("T")[0];
+    try {
       const res = await axios.get(
-        `/api/bookings/available-slots?date=${dateString}`
+        `/api/bookings/disabled-dates?start=${today}&days=${daysToCheck}`
       );
-      const data = res.data;
-
-      // 🔥 THIS IS THE IMPORTANT FIX:
-      const hasAvailableSlots = data.availableSlots.some(
-        (slot) => slot.available
-      );
-
-      if (!hasAvailableSlots) {
-        datesToDisable.push(new Date(date));
-      }
+      const disabled = res.data.disabledDates.map((d) => new Date(d));
+      setUnavailableDates(disabled);
+    } catch (err) {
+      console.error("Failed to load disabled dates:", err);
+      setUnavailableDates([]);
     }
-
-    setUnavailableDates(datesToDisable);
   }
 
   useEffect(() => {
@@ -73,6 +51,7 @@ export default function BookingForm({ service, unique_code }) {
       setAvailableSlots([]);
     }
   }
+
   useEffect(() => {
     if (slotDate) {
       const formatted = slotDate.toISOString().split("T")[0];
@@ -89,7 +68,7 @@ export default function BookingForm({ service, unique_code }) {
       return;
     }
 
-    setShowConfirmDialog(true); // show the dialog now
+    setShowConfirmDialog(true);
   };
 
   const confirmBooking = async (e) => {
@@ -97,7 +76,6 @@ export default function BookingForm({ service, unique_code }) {
     setLoading(true);
     setError(null);
 
-    // Ensure all required fields are filled
     if (!email || !selectedTime) {
       setError("All fields are required.");
       setLoading(false);
@@ -112,22 +90,18 @@ export default function BookingForm({ service, unique_code }) {
         slot_time: selectedTime,
         Service_id: service._id,
         total_price,
-        unique_code: unique_code,
+        unique_code,
       });
 
       if (response.status === 201) {
-        // if the booking is created then:
-        // reset everything and set the view as it was before
         setSuccess(true);
         setEmail("");
         setSlotDate(new Date());
-
         setSelectedTime("");
         setAvailableSlots([]);
         await fetchDisabledDates();
       }
 
-      // close the dialog
       setShowConfirmDialog(false);
     } catch (err) {
       console.error("Booking Error:", err.response?.data || err.message);
@@ -168,9 +142,9 @@ export default function BookingForm({ service, unique_code }) {
             selected={slotDate}
             onChange={(date) => setSlotDate(date)}
             minDate={new Date()}
-            filterDate={(date) => {
-              return !unavailableDates.some((d) => isSameDay(d, date));
-            }}
+            filterDate={(date) =>
+              !unavailableDates.some((d) => isSameDay(d, date))
+            }
             placeholderText='Select a booking date'
             dateFormat='yyyy-MM-dd'
             className='w-full border rounded p-2'
@@ -192,7 +166,7 @@ export default function BookingForm({ service, unique_code }) {
             <option value=''>Select a time</option>
             {availableSlots.length > 0 ? (
               availableSlots
-                .filter((slot) => slot.available) // Only show available ones
+                .filter((slot) => slot.available)
                 .map(({ time }) => (
                   <option key={time} value={time}>
                     {time}
@@ -209,6 +183,7 @@ export default function BookingForm({ service, unique_code }) {
           {loading ? "Booking..." : "Book Now"}
         </Button>
       </form>
+
       <ConfirmationDialog
         open={showConfirmDialog}
         onCancel={() => setShowConfirmDialog(false)}

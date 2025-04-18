@@ -19,7 +19,7 @@ const StoreConfigSchema = new mongoose.Schema(
   {
     Open_times: {
       type: Map,
-      of: OpenTimeSchema, // ✅ Now properly stores an object instead of a string
+      of: OpenTimeSchema,
       required: true,
     },
     max_bookings_per_slot: {
