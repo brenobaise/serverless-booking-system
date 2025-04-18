@@ -163,8 +163,10 @@ export default function AdminBookingCard({ booking, onEdit, onDelete }) {
               {booking.user_email}
             </p>
             <p className='text-sm mt-2 text-black font-bold text-center p-1'>
-              {booking.slot_date?.split("T")[0]} {booking.slot_time}
+              {booking.slot_time}{" "}
+              {new Date(booking.slot_date).toLocaleDateString("en-GB")}
             </p>
+
             <p className='text-sm text-center'>Price: £{booking.total_price}</p>
             <div className='flex justify-between mt-4'>
               <Button

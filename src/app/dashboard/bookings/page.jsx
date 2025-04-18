@@ -4,12 +4,14 @@ import Dialog from "@/components/UI/Dialog";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import DashboardBookingSearch from "@/components/bookings/DashboardBookingSearch";
+import { useMemo } from "react";
 
 export default function DashboardBookingPage() {
   const [allBookings, setAllBookings] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState("soonest"); // default to soonest
 
   const fetchBookings = async () => {
     try {
@@ -68,6 +70,25 @@ export default function DashboardBookingPage() {
       setBookings(allBookings); // fallback if no matches
     }
   };
+  const sortBookings = (bookingsToSort, order) => {
+    return [...bookingsToSort].sort((a, b) => {
+      const dateA = new Date(a.slot_date);
+      const dateB = new Date(b.slot_date);
+
+      const [hoursA, minutesA] = a.slot_time.split(":").map(Number);
+      const [hoursB, minutesB] = b.slot_time.split(":").map(Number);
+
+      dateA.setHours(hoursA, minutesA);
+      dateB.setHours(hoursB, minutesB);
+      console.log("Sorting", a.slot_date, a.slot_time, "=>", dateA);
+
+      return order === "soonest" ? dateA - dateB : dateB - dateA;
+    });
+  };
+
+  const sortedBookings = useMemo(() => {
+    return sortBookings(bookings, sortOrder);
+  }, [bookings, sortOrder]);
 
   if (loading)
     return <p className='text-center text-gray-500'>Loading bookings...</p>;
@@ -79,10 +100,22 @@ export default function DashboardBookingPage() {
         <div className='flex justify-center items-center'>
           <DashboardBookingSearch onResults={handleSearchResults} />
         </div>
-
         <div className='flex flex-col justify-center items-center'>
+          {/* Sort Dropdown */}
+          <div className='my-4'>
+            <label className='mr-2'>Sort by:</label>
+            <select
+              className='border px-2 py-1 rounded'
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value='soonest'>Soonest First</option>
+              <option value='latest'>Latest First</option>
+            </select>
+          </div>
+
           <BookingList
-            bookings={bookings}
+            bookings={sortedBookings}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />

@@ -15,14 +15,9 @@ export async function GET(req, { params }) {
       // If the identifier is an email
       if (identifier.includes("@")) {
         const bookings = await Booking.withServiceDetailsByEmail(identifier);
-        if (bookings.length === 0) {
-          return NextResponse.json(
-            { error: `No bookings found for this email. ${identifier}` },
-            { status: 404 }
-          );
-        }
-        return NextResponse.json(bookings, { status: 200 });
+        return NextResponse.json(bookings || [], { status: 200 });
       }
+
 
       // If the identifier is a valid ObjectID
       if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
