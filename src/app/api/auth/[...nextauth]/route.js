@@ -1,4 +1,8 @@
 /* eslint-disable no-undef */
+import connectToDatabase from "@/lib/mongoose.js";
+import { ensureAdminAccount } from "@/scripts/ensureAdmin";
+import Admin from "@/app/models/AdminSchema"
+import bcrypt from "bcrypt"
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 // admin/dashboard
@@ -11,15 +15,17 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const { username, password } = credentials;
+        await connectToDatabase();
+        await ensureAdminAccount(); // Ensure admin is created on first login attempt
 
-        // Replace this logic with a database query if needed
-        if (
-          username === process.env.ADMIN_USERNAME &&
-          password === process.env.ADMIN_PASSWORD
-        ) {
-          return { id: "1", name: "Admin", role: "admin" }; // Admin user object
-        }
+        const admin = await Admin.findOne({ email: credentials.username });
+        if (!admin) return null;
+
+        const valid = await bcrypt.compare(credentials.password, admin.passwordHash);
+        if (!valid) return null;
+
+        return { id: admin._id.toString(), name: "Admin", role: "admin" };
+
 
         return null; // Return null if login fails
       },
