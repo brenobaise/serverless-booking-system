@@ -77,7 +77,6 @@ export default function FetchBookingsByEmail() {
         alert(response.data.error || "Failed to cancel booking");
       }
     } catch (err) {
-      console.error("Cancellation error:", err.message);
       alert(err.response?.data?.error || "Something went wrong");
     } finally {
       setLoading(false);

@@ -90,7 +90,94 @@ export default function BookingForm({ service, unique_code }) {
 
   return (
     <div className='border p-4 rounded shadow-md max-w-md bg-white w-full sm:w-96'>
-      {/* ... same JSX as before for email, datepicker, select, button, dialog */}
+      <h2 className='text-xl font-bold mb-4'>Book {service.name}</h2>
+      {success && <p className='text-green-600 mb-4'>Booking successful!</p>}
+      {error && <p className='text-red-600 mb-4'>{error}</p>}
+
+      <form onSubmit={handleFormSubmit} className='flex flex-col gap-4'>
+        {/* Email Input Field */}
+        <div>
+          <label htmlFor='email' className='block font-medium'>
+            Your Email
+          </label>
+          <input
+            type='email'
+            id='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className='w-full border rounded p-2'
+          />
+        </div>
+
+        {/* Date Input */}
+        <div>
+          <label htmlFor='slotDate' className='block font-medium'>
+            Booking Date
+          </label>
+          <DatePicker
+            selected={slotDate}
+            onChange={(date) => setSlotDate(date)}
+            minDate={new Date()}
+            filterDate={(date) => {
+              return !unavailableDates.some((d) => isSameDay(d, date));
+            }}
+            placeholderText='Select a booking date'
+            dateFormat='yyyy-MM-dd'
+            className='w-full border rounded p-2'
+          />
+        </div>
+
+        {/* Available Slots Dropdown */}
+        <div>
+          <label htmlFor='slotTime' className='block font-medium'>
+            Select Time Slot
+          </label>
+          <select
+            id='slotTime'
+            value={selectedTime}
+            onChange={(e) => setSelectedTime(e.target.value)}
+            required
+            className='w-full border rounded p-2'
+          >
+            <option value=''>Select a time</option>
+            {availableSlots.length > 0 ? (
+              availableSlots
+                .filter((slot) => slot.available) // Only show available ones
+                .map(({ time }) => (
+                  <option key={time} value={time}>
+                    {time}
+                  </option>
+                ))
+            ) : (
+              <option disabled>No slots available</option>
+            )}
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <Button type='submit' disabled={loading}>
+          {loading ? "Booking..." : "Book Now"}
+        </Button>
+      </form>
+      <ConfirmationDialog
+        open={showConfirmDialog}
+        onCancel={() => setShowConfirmDialog(false)}
+        onConfirm={confirmBooking}
+        loading={loading}
+        data={{
+          serviceName: service.name,
+          price: service.price,
+          email,
+          date: slotDate.toLocaleDateString("en-GB", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+          time: selectedTime,
+        }}
+        unique_code={unique_code}
+      />
     </div>
   );
 }

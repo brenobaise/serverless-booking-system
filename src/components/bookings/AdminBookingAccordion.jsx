@@ -187,6 +187,9 @@ export default function AdminBookingAccordion({ booking, onEdit, onDelete }) {
                 <strong>Booked on:</strong>{" "}
                 {new Date(booking.booking_date_placed).toLocaleString("en-GB")}
               </p>
+              <p className='text-sm text-gray-700'>
+                <strong>Booking Date:</strong> {formattedDateTime}
+              </p>
 
               <div className='flex justify-end gap-4 mt-4'>
                 <Button
