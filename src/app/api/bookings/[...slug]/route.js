@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 
 export async function GET(req, { params }) {
   const { slug } = await params;
+  await connectToDatabase()
 
   try {
     // Check if the slug contains a single identifier
@@ -19,7 +20,6 @@ export async function GET(req, { params }) {
       }
 
 
-      // If the identifier is a valid ObjectID
       if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
         console.log("Fetching booking by ID:", identifier);
 
