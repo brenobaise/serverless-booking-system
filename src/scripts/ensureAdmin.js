@@ -7,7 +7,7 @@ export async function ensureAdminAccount() {
 
     const admin = await Admin.findOne({});
     if (!admin) {
-        const email = "admin@example.com";
+        const email = "admin";
         const password = "changeme123";
         const hash = await bcrypt.hash(password, 10);
 

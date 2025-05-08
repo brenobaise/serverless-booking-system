@@ -63,6 +63,7 @@ export async function PUT(req, { params }) {
         price,
         duration,
         isAvailable,
+
       },
       { new: true, runValidators: true } // Return the updated document and validate input
     );

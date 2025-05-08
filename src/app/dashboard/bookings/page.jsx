@@ -113,9 +113,9 @@ export default function DashboardBookingPage() {
               <option value='latest'>Latest First</option>
             </select>
           </div>
-
           <BookingList
             bookings={sortedBookings}
+            isAdmin={true}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />

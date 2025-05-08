@@ -72,11 +72,14 @@ BookingSchema.statics.withServiceDetails = function () {
 BookingSchema.statics.withServiceDetailsByEmail = function (email) {
   return this.aggregate([
     {
-      $match: { user_email: email },
+      $match: {
+        user_email: email,
+        slot_date: { $gte: new Date() }, // Only future or today's bookings
+      },
     },
     {
       $lookup: {
-        from: "services", // Collection name in MongoDB
+        from: "services",
         localField: "Service_id",
         foreignField: "_id",
         as: "serviceDetails",
@@ -89,19 +92,26 @@ BookingSchema.statics.withServiceDetailsByEmail = function (email) {
       },
     },
     {
+      $sort: {
+        slot_date: 1,
+        slot_time: 1, // Assuming time is in "HH:mm" format
+      },
+    },
+    {
       $project: {
         _id: 1,
         user_email: 1,
         booking_date_placed: 1,
         slot_date: 1,
         slot_time: 1,
-        serviceName: "$serviceDetails.name", // Extract the service name
+        serviceName: "$serviceDetails.name",
         total_price: 1,
         unique_code: 1,
       },
     },
   ]);
 };
+
 
 export default mongoose.models.Booking ||
   mongoose.model("Booking", BookingSchema);

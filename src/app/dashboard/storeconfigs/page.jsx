@@ -29,7 +29,6 @@ export default function WorkingHoursAdmin() {
       const data = res.data.data;
 
       if (data) {
-        // Normalise the data before setting state
         setWorkingHours(normaliseOpenTimes(data.open_times || defaultHours));
         setMaxBookings(data.max_booking_per_slot || 2);
       }
@@ -50,14 +49,14 @@ export default function WorkingHoursAdmin() {
 
     try {
       await axios.put("/api/dashboard/storeconfig", payload);
-      setMessage("Working hours updated successfully!");
+      setMessage("✅ Working hours updated successfully!");
       fetchWorkingHours();
     } catch (error) {
       console.error(
         "Error Updating Working Hours:",
         error.response?.data || error.message
       );
-      setMessage("Failed to update working hours");
+      setMessage("❌ Failed to update working hours.");
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,7 @@ export default function WorkingHoursAdmin() {
   function handleTimeChange(day, field, value) {
     setWorkingHours((prev) => ({
       ...prev,
-      [day]: { ...prev[day], [field]: value || "" }, //Prevents undefined values
+      [day]: { ...prev[day], [field]: value || "" },
     }));
   }
 
@@ -94,56 +93,92 @@ export default function WorkingHoursAdmin() {
   }
 
   return (
-    <div className='max-w-2xl mx-auto p-4'>
-      <h2 className='text-xl font-bold mb-4'>Set Working Hours</h2>
-      <form onSubmit={handleSubmit} className='space-y-4'>
-        {Object.keys(workingHours).map((day) => (
-          <div key={day} className='flex items-center space-x-4'>
-            <span className='w-20'>{day}</span>
-            <input
-              type='time'
-              value={workingHours[day].start || ""}
-              disabled={workingHours[day].isClosed}
-              onChange={(e) => handleTimeChange(day, "start", e.target.value)}
-              className='border p-2'
-            />
-            <input
-              type='time'
-              value={workingHours[day].end || ""}
-              disabled={workingHours[day].isClosed}
-              onChange={(e) => handleTimeChange(day, "end", e.target.value)}
-              className='border p-2'
-            />
-            <input
-              type='checkbox'
-              checked={workingHours[day].isClosed}
-              onChange={() => toggleClosed(day)}
-            />
-            <span>Closed</span>
+    <div className='flex flex-col items-center p-6'>
+      <div className='w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6 space-y-6'>
+        <h2 className='text-xl font-bold text-center'>Set Working Hours</h2>
+
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          {/* Days */}
+          <div className='space-y-3'>
+            {Object.keys(workingHours).map((day) => (
+              <div
+                key={day}
+                className='grid grid-cols-5 gap-3 items-center text-sm'
+              >
+                <span className='font-medium'>{day}</span>
+
+                <input
+                  type='time'
+                  value={workingHours[day].start || ""}
+                  disabled={workingHours[day].isClosed}
+                  onChange={(e) =>
+                    handleTimeChange(day, "start", e.target.value)
+                  }
+                  className='border p-2 rounded-md text-center'
+                />
+
+                <input
+                  type='time'
+                  value={workingHours[day].end || ""}
+                  disabled={workingHours[day].isClosed}
+                  onChange={(e) => handleTimeChange(day, "end", e.target.value)}
+                  className='border p-2 rounded-md text-center'
+                />
+
+                <div className='flex items-center justify-center col-span-2'>
+                  <input
+                    type='checkbox'
+                    checked={workingHours[day].isClosed}
+                    onChange={() => toggleClosed(day)}
+                    className='mr-2'
+                  />
+                  <label className='text-gray-700'>Closed</label>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
 
-        <div>
-          <label className='block'>Max Bookings per Slot:</label>
-          <input
-            type='number'
-            value={maxBookings}
-            onChange={(e) => setMaxBookings(parseInt(e.target.value) || 1)}
-            className='border p-2 w-20'
-          />
-        </div>
+          {/* Max Bookings */}
+          <div className='flex items-center gap-3'>
+            <label className='text-sm font-medium'>
+              Max Bookings per Slot:
+            </label>
+            <input
+              type='number'
+              value={maxBookings}
+              min={1}
+              onChange={(e) => setMaxBookings(parseInt(e.target.value) || 1)}
+              className='border p-2 rounded-md w-20 text-center'
+            />
+          </div>
 
-        <Button
-          type='submit'
-          variant='primary'
-          size='medium'
-          disabled={loading}
-        >
-          {loading ? "Saving..." : "Save Changes"}
-        </Button>
+          {/* Save Button */}
+          <div className='flex justify-center'>
+            <Button
+              type='submit'
+              variant='primary'
+              size='medium'
+              disabled={loading}
+              className='px-6 py-2 text-sm'
+            >
+              {loading ? "Saving..." : "Save Changes"}
+            </Button>
+          </div>
 
-        {message && <p className='text-green-500 mt-2'>{message}</p>}
-      </form>
+          {/* Message */}
+          {message && (
+            <p
+              className={`text-sm text-center font-medium ${
+                message.includes("successfully")
+                  ? "text-green-600"
+                  : "text-red-600"
+              }`}
+            >
+              {message}
+            </p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

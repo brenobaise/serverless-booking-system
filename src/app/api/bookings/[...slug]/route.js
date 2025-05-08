@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongoose";
 import Booking from "@/app/models/Booking";
 import mongoose from "mongoose";
+import Service from "@/app/models/Service";
+
 
 
 export async function GET(req, { params }) {
@@ -75,25 +77,32 @@ export async function PATCH(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { slug } = await params;
+  const { slug } = params;
   const id = slug[0];
-  // checks if the incoming id is a valid MongoDB ObjectID
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ error: "Invalid booking ID" }, { status: 400 });
   }
 
   try {
-    const deleted = await Booking.findByIdAndDelete(id);
+    await connectToDatabase();
 
-    if (!deleted) {
-      return NextResponse.json(
-        { error: "Booking not found" },
-        { status: 404 }
-      );
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    await Booking.findByIdAndDelete(id);
+
+    // 3. Decrement the numOfTimesBooked for the associated service
+    if (booking.Service_id) {
+      await Service.findByIdAndUpdate(booking.Service_id, {
+        $inc: { numOfTimesBooked: -1 },
+      });
     }
 
     return NextResponse.json(
-      { message: "Booking successfully deleted", deleted },
+      { message: "Booking successfully deleted", deleted: booking },
       { status: 200 }
     );
   } catch (err) {

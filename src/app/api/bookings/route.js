@@ -1,8 +1,9 @@
 import connectToDatabase from "@/lib/mongoose";
 import Booking from "@/app/models/Booking";
 import { NextResponse } from "next/server";
-import { validateBookingData } from "@/lib/validators/bookingValidation";
 import StoreConfig from "@/app/models/StoreConfig";
+import Service from "@/app/models/Service";
+
 
 // GET api/bookings => gets all available bookings
 // Admin Only Route ?
@@ -66,6 +67,10 @@ export async function POST(req) {
       Service_id,
       total_price,
       unique_code
+    });
+
+    await Service.findByIdAndUpdate(Service_id, {
+      $inc: { numOfTimesBooked: 1 }
     });
 
     return NextResponse.json(newBooking, { status: 201 });
