@@ -7,6 +7,7 @@ function Dialog({ children }) {
       >
         {children}
       </div>
+      <h1>TELLO</h1>
     </div>
   );
 }
