@@ -2,8 +2,8 @@ import SidebarItem from "@/components/Sidebar/SideBarItem";
 
 function SideBar() {
   return (
-    <div className=" flex flex-row">
-      <div className="flex flex-col justify-start  grow-0 bg-blue-700  w-[250px] rounded-tl-xl rounded-bl-xl border-3">
+    <div className=' flex flex-row'>
+      <div className='flex flex-col justify-start  grow-0 bg-blue-700  w-[250px] rounded-tl-xl rounded-bl-xl border-3'>
         <SidebarItem
           iconPath={"/overview.svg"}
           url={"/dashboard/storeconfigs"}

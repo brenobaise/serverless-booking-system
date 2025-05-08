@@ -79,7 +79,7 @@ export async function GET(req) {
 
     const maxBookingsPerSlot = storeConfig.max_bookings_per_slot || 1;
 
-    const dayOfWeek = new Date(date).toLocaleString("en-US", {
+    const dayOfWeek = new Date(date).toLocaleString("en-GB", {
       weekday: "long",
     });
     const openingHours = storeConfig.Open_times.get(dayOfWeek); // Use `.get()` for Map

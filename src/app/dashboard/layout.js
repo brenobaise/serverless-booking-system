@@ -18,7 +18,7 @@ export default async function DashboardLayout({ children }) {
 
   return (
     // eslint-disable-next-line react/react-in-jsx-scope
-    <div className='flex flex-row p-6 '>
+    <div className='flex flex-row p-6'>
       <Sidebar />
       <main className=''>{children}</main>
     </div>
