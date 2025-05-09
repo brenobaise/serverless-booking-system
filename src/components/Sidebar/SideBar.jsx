@@ -22,6 +22,12 @@ function SideBar() {
           itemName={"Services"}
           size={"large"}
         />
+        <SidebarItem
+          iconPath={"/services.svg"}
+          url={"/dashboard"}
+          itemName={"Change Password"}
+          size={"large"}
+        />
       </div>
     </div>
   );

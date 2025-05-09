@@ -23,7 +23,6 @@ export async function GET(req, { params }) {
 
 
       if (identifier.match(/^[0-9a-fA-F]{24}$/)) {
-        console.log("Fetching booking by ID:", identifier);
 
         const booking = await Booking.findById(identifier);
         if (!booking) {

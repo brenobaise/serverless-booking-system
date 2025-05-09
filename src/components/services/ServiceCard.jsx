@@ -15,8 +15,8 @@ export default function ServiceCard({ service }) {
   return (
     <div className='flex flex-col h-fit border border-gray-200 p-6 rounded-2xl shadow-lg gap-4 bg-white w-full min-w-[300px] transition hover:shadow-xl'>
       <img
-        className='w-full h-48 object-cover rounded-xl '
-        src='testimage.jpg'
+        className='w-full h-48 object-cover opacity-30 rounded-xl '
+        src='/tempimg.svg'
         alt={service.name}
       />
 

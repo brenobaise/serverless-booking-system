@@ -80,7 +80,6 @@ export default function DashboardBookingPage() {
 
       dateA.setHours(hoursA, minutesA);
       dateB.setHours(hoursB, minutesB);
-      console.log("Sorting", a.slot_date, a.slot_time, "=>", dateA);
 
       return order === "soonest" ? dateA - dateB : dateB - dateA;
     });

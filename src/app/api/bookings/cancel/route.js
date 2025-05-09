@@ -17,7 +17,6 @@ export async function POST(req) {
         if (!booking) {
             return NextResponse.json({ error: "Booking not found" }, { status: 404 });
         }
-        console.log("Provided:", userInputCode, "Expected:", booking.unique_code);
 
         if (booking.unique_code !== userInputCode) {
             return NextResponse.json({ error: "Invalid confirmation code" }, { status: 401 });

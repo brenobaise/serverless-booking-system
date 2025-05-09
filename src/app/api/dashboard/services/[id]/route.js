@@ -36,7 +36,7 @@ export async function GET(req, { params }) {
 
 // Admin  POST api/dashboard/services/:id
 export async function PUT(req, { params }) {
-  const { id } = params;
+  const { id } = await params;
   const {
     name,
     small_description,
