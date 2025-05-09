@@ -2,50 +2,110 @@
 import { useEditMode } from "@/context/EditModeContext";
 import { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
+import axios from "axios";
 
 export default function EditableBackground({
   configKey,
-  defaultBgClass = "",
+  defaultBgClass = "#ffffff",
   children,
   btnName,
 }) {
   const { isEditMode } = useEditMode();
-  const [color, setColor] = useState(null);
+  const [colour, setColour] = useState(null); // persisted color from DB
+  const [draftColour, setDraftColour] = useState(null); // preview color in picker
   const [showPicker, setShowPicker] = useState(false);
 
+  // ✅ Fetch the saved color from your API on first render
   useEffect(() => {
-    const stored = localStorage.getItem(configKey);
-    if (stored) setColor(stored);
-  }, [configKey]);
+    const loadColour = async () => {
+      try {
+        const res = await axios.get("/api/store-config/background-colours", {
+          headers: {
+            "Cache-Control": "no-store", // ensures fresh DB fetch
+          },
+        });
 
-  const handleColorChange = (newColor) => {
-    setColor(newColor.hex);
-    localStorage.setItem(configKey, newColor.hex);
+        const saved = res.data.background_colors?.[configKey];
+
+        if (saved) {
+          setColour(saved);
+          setDraftColour(saved);
+        } else {
+          setColour(defaultBgClass);
+          setDraftColour(defaultBgClass);
+        }
+      } catch (err) {
+        console.error("Error fetching background color:", err);
+        setColour(defaultBgClass);
+        setDraftColour(defaultBgClass);
+      }
+    };
+
+    loadColour();
+  }, [configKey, defaultBgClass]);
+
+  // ✅ Save new color to your DB via PATCH
+  const handleSave = async () => {
+    try {
+      await axios.patch("/api/store-config/background-colours", {
+        background_colors: {
+          [configKey]: draftColour,
+        },
+      });
+
+      setColour(draftColour);
+      setShowPicker(false);
+    } catch (err) {
+      console.error(
+        "Failed to update background colour:",
+        err?.response?.data || err.message
+      );
+    }
+  };
+
+  const handleCancel = () => {
+    setDraftColour(colour);
+    setShowPicker(false);
   };
 
   return (
     <div
-      style={color ? { backgroundColor: color } : {}}
-      className={`relative group ${!color && defaultBgClass}`}
+      style={{ backgroundColor: draftColour || defaultBgClass }}
+      className='relative'
     >
       {isEditMode && (
-        <div className='absolute top-2 right-2 z-50 transition-opacity duration-300 opacity-0 group-hover:opacity-100'>
-          <div className='backdrop-blur-md bg-white/60 rounded shadow-md'>
+        <div className='absolute top-2 right-2 z-50'>
+          <div className='backdrop-blur-md bg-white/60 rounded shadow-md p-2'>
             <button
               onClick={() => setShowPicker(!showPicker)}
-              className='text-black px-6 py-2 rounded text-xs hover:bg-white/80'
+              className='text-black px-4 py-1 rounded text-xs hover:bg-white/80'
             >
               {btnName || "Colour Picker"}
             </button>
+
+            {showPicker && (
+              <div className='mt-2 space-y-2'>
+                <SketchPicker
+                  color={draftColour || "#ffffff"}
+                  onChange={(newColor) => setDraftColour(newColor.hex)}
+                />
+                <div className='flex justify-end space-x-2 text-xs'>
+                  <button
+                    onClick={handleCancel}
+                    className='bg-gray-200 hover:bg-gray-300 text-black px-3 py-1 rounded'
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className='bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded'
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          {showPicker && (
-            <div className='mt-2'>
-              <SketchPicker
-                color={color || "#ffffff"}
-                onChange={handleColorChange}
-              />
-            </div>
-          )}
         </div>
       )}
 

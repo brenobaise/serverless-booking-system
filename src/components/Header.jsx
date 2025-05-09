@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <EditableBackground
-      configKey='header-bg-color'
+      configKey='header-bg-colour'
       defaultBgClass='bg-slate-900'
       btnName={"Change Header Colour"}
     >

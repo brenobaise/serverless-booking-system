@@ -27,7 +27,14 @@ const StoreConfigSchema = new mongoose.Schema(
       default: 1,
       min: 1,
     },
+    background_colors: {
+      type: Map,
+      of: String,
+      default: {},
+    },
+
   },
+
   { timestamps: true }
 );
 
