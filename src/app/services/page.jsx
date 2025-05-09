@@ -30,9 +30,5 @@ export default function ServicesPage() {
   if (loading) return <p>Loading services...</p>;
   if (error) return <p>{error}</p>;
 
-  return (
-    <div className=" container mx-auto p-6">
-      <ServiceList services={services} />
-    </div>
-  );
+  return <ServiceList services={services} />;
 }

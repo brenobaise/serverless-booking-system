@@ -77,7 +77,7 @@ export async function PATCH(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const { slug } = params;
+  const { slug } = await params;
   const id = slug[0];
 
   if (!mongoose.Types.ObjectId.isValid(id)) {

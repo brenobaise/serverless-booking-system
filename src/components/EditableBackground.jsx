@@ -15,7 +15,6 @@ export default function EditableBackground({
   const [draftColour, setDraftColour] = useState(null); // preview color in picker
   const [showPicker, setShowPicker] = useState(false);
 
-  // ✅ Fetch the saved color from your API on first render
   useEffect(() => {
     const loadColour = async () => {
       try {
@@ -44,7 +43,6 @@ export default function EditableBackground({
     loadColour();
   }, [configKey, defaultBgClass]);
 
-  // ✅ Save new color to your DB via PATCH
   const handleSave = async () => {
     try {
       await axios.patch("/api/store-config/background-colours", {
@@ -71,7 +69,9 @@ export default function EditableBackground({
   return (
     <div
       style={{ backgroundColor: draftColour || defaultBgClass }}
-      className='relative'
+      className={`relative flex flex-col flex-grow w-full  ${
+        !colour && defaultBgClass
+      }`}
     >
       {isEditMode && (
         <div className='absolute top-2 right-2 z-50'>
