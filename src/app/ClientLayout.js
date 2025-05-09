@@ -7,6 +7,8 @@ import EditModeToggle from "@/components/EditModeToggle";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import EditableBackground from "@/components/EditableBackground";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 import DelayedApp from "@/components/DelayedApp";
 

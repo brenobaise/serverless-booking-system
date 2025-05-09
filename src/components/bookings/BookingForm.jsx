@@ -5,6 +5,7 @@ import Button from "../UI/Button";
 import ConfirmationDialog from "./ConfirmationDialog";
 import DatePicker from "react-datepicker";
 import { isSameDay } from "date-fns";
+// app/layout.tsx or app/ClientLayout.tsx (whichever is client-side)
 
 export default function BookingForm({ service, unique_code }) {
   const [email, setEmail] = useState("");
@@ -89,7 +90,7 @@ export default function BookingForm({ service, unique_code }) {
   };
 
   return (
-    <div className='border p-4 rounded shadow-md max-w-md bg-white w-full sm:w-96'>
+    <div className='border p-4 rounded shadow-md bg-white w-full'>
       <h2 className='text-xl font-bold mb-4'>Book {service.name}</h2>
       {success && <p className='text-green-600 mb-4'>Booking successful!</p>}
       {error && <p className='text-red-600 mb-4'>{error}</p>}
