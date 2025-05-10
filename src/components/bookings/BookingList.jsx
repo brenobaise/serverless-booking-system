@@ -9,6 +9,17 @@ export default function BookingList({
   onDelete,
   onCancel,
 }) {
+  const groupByDate = (bookings) => {
+    return bookings.reduce((acc, booking) => {
+      const dateKey = new Date(booking.slot_date).toLocaleDateString("en-GB");
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(booking);
+      return acc;
+    }, {});
+  };
+
   const [showPast, setShowPast] = useState(false);
 
   if (!Array.isArray(bookings) || bookings.length === 0) {
@@ -48,12 +59,11 @@ export default function BookingList({
       {/* Admin Layout */}
       {isAdmin ? (
         <div className='flex flex-col gap-4 px-4'>
-          {upcoming.length > 0 && (
-            <>
-              <h3 className='text-lg font-semibold text-gray-700'>
-                Upcoming Bookings
-              </h3>
-              {upcoming.map((booking) => (
+          {Object.entries(groupByDate(upcoming)).map(([date, group], index) => (
+            <div key={date} className='space-y-2 mt-6'>
+              {index > 0 && <hr className='border-t border-gray-300 mb-4' />}
+              <h4 className='text-center text-white font-semibold'>{date}</h4>
+              {group.map((booking) => (
                 <AdminBookingAccordion
                   key={booking._id}
                   booking={booking}
@@ -61,24 +71,24 @@ export default function BookingList({
                   onDelete={onDelete}
                 />
               ))}
-            </>
-          )}
+            </div>
+          ))}
 
-          {showPast && past.length > 0 && (
-            <>
-              <h3 className='text-lg font-semibold text-gray-700 mt-6'>
-                Past Bookings
-              </h3>
-              {past.map((booking) => (
-                <AdminBookingAccordion
-                  key={booking._id}
-                  booking={booking}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              ))}
-            </>
-          )}
+          {showPast &&
+            Object.entries(groupByDate(past)).map(([date, group], index) => (
+              <div key={date} className='space-y-2 mt-6'>
+                {index > 0 && <hr className='border-t border-gray-300 mb-4' />}
+                <h4 className='text-center text-white font-semibold'>{date}</h4>
+                {group.map((booking) => (
+                  <AdminBookingAccordion
+                    key={booking._id}
+                    booking={booking}
+                    onEdit={onEdit}
+                    onDelete={onDelete}
+                  />
+                ))}
+              </div>
+            ))}
         </div>
       ) : (
         // User Layout
